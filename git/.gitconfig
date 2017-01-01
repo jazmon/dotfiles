@@ -1,0 +1,89 @@
+[user]
+	email = atte.huhtakangas@gmail.com
+	name = Atte Huhtakangas
+	
+[core]
+	editor = subl
+	excludesfile = /Users/atte/.gitignore_global
+	autocrlf = input # don't do any line ending conversion
+	
+[web]
+	browser = google-chrome
+
+[url "https://bitbucket.org/"]
+	insteadOf = bb:
+[url "https://github.com/"]
+	insteadOf = gh:
+[url "https://gist.github.com/"]
+	insteadOf = gist:
+[url "https://gitlab.com/"]
+	insteadOf = gl:
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	grep = auto
+	interactive = auto
+	pager = true
+	showBranch = auto
+	status = auto
+
+[color "branch"]
+	current = yellow bold
+	local = green bold
+	remote = cyan bold
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[color "status"]
+	added = green bold
+	changed = yellow bold
+	untracked = red bold
+
+[diff]
+	renames = copies # detect copies and renames
+	indentHeuristic = true # help distinguish line changes
+	compactionHeuristic = true # should help make diffs nicer
+
+[alias]
+	cm = commit
+	co = checkout
+	df = diff
+	f = fetch
+	fo = fetch origin
+	pso = push origin
+	s = status
+	st = status
+	# list contributors with number of commits
+	contributors = shortlog --summary --numbered
+	undo = reset HEAD~1 --mixed
+	# Show all of my configured aliases
+	aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
+	# For when you made that commit a bit too early, amend
+	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+	# Show all branches
+	br = branch -av
+	# Show the current branch name (usefull for shell prompts)
+	brname = !git branch | grep "^*" | awk '{ print $2 }'
+	# Unstage changes from the index
+	unstage = reset HEAD --
+	# List all tags
+	tags = tag -l
+	lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	lg = !"git lg1"
+	# go through project history
+	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -" # name as param
+	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short # commit name as param 
+	# pretty git logs
+ 	# lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative # nice graph?
+ 	lc = log ORIG_HEAD.. --stat --no-merges # list all new commits after a fetch, sans merges
+ 	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate # single line
+ 	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat # list by author
+ 	llnc = log --pretty=format:"%h\\ %s\\ [%cn]" # list by author, no colors
