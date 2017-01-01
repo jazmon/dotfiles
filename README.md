@@ -6,7 +6,7 @@
 ```
 brew tap homebrew/bundle
 brew bundle
-bin/stow-all
+make install
 ```
 
 ## iTerm
