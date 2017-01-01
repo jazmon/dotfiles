@@ -1,6 +1,6 @@
 .DEFAULT_GOAL:=install
 
-PACKAGES=(fish git heroku hg hyper omf zsh)
+PACKAGES=fish git heroku hg hyper omf zsh
 
 .PHONY: install
 install:
