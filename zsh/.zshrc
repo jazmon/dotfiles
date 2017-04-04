@@ -51,8 +51,8 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew common-aliases npm osx zsh-autosuggestions)
-
+plugins=(git brew common-aliases npm osx zsh-autosuggestions yarn sublime react-native postgres node lol history extract dotenv adb zsh-syntax-highlighting)
+# colorize battery
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
