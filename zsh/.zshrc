@@ -51,7 +51,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew common-aliases npm osx zsh-autosuggestions yarn sublime react-native postgres node lol history extract dotenv adb zsh-syntax-highlighting)
+plugins=(git brew common-aliases npm osx zsh-autosuggestions yarn sublime react-native postgres node lol history extract dotenv adb zsh-syntax-highlighting thefuck z)
 # colorize battery
 source $ZSH/oh-my-zsh.sh
 
@@ -66,7 +66,7 @@ export ANDROID_HOME='/Users/ahuh/Library/Android/sdk'
 export ANDROID_SDK_ROOT='/Users/ahuh/Library/Android/sdk'
 export NVM_DIR='~/.nvm'
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/ahuh/tools/activator-dist-1.3.12/bin:/Users/ahuh/.nvm/versions/node/v7.7.3/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/ahuh/tools/activator-dist-1.3.12/bin:/Users/ahuh/.nvm/versions/node/v7.7.3/bin:/Users/ahuh/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
@@ -78,7 +78,12 @@ alias susu='sudo subl'
 alias ll='ls -alhF'
 # alias chrome /etc/alternatives/google-chrome
 alias grep='grep --color=auto'
-eval $(thefuck --alias | tr '\n' ';')
+alias npmopen='npm home'
+alias url='open -a /Applications/Google\ Chrome.app'
+
+ypkg() {
+	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
+}
 
 greeting() {
 	fortune -a | cowsay -W 60 | lolcat
@@ -109,6 +114,13 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# setup virtualenvs
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /usr/local/bin/virtualenvwrapper.sh
+
+# setup rust
+source $HOME/.cargo/env
 
 export NVM_DIR="/Users/ahuh/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
