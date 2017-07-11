@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/ahuh/.oh-my-zsh
+export ZSH=/Users/$USER/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -62,16 +62,16 @@ source $ZSH/oh-my-zsh.sh
 # ENV VARIABLES
 export REACT_EDITOR='atom'
 export HOMEBREW_GITHUB_API_TOKEN='0ba589a24fd1fa7667e4728fcaa77ce23f900701'
-export ANDROID_HOME='/Users/ahuh/Library/Android/sdk'
-export ANDROID_SDK_ROOT='/Users/ahuh/Library/Android/sdk'
+export ANDROID_HOME='/Users/$USER/Library/Android/sdk'
+export ANDROID_SDK_ROOT='/Users/$USER/Library/Android/sdk'
 export NVM_DIR='~/.nvm'
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/ahuh/tools/activator-dist-1.3.12/bin:/Users/ahuh/.nvm/versions/node/v7.7.3/bin:/Users/ahuh/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/tools/activator-dist-1.3.12/bin:/Users/$USER/.nvm/versions/node/v7.7.3/bin:/Users/$USER/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
 export THEME_HIDE_HOSTNAME='no'
-export DEFAULT_USER='ahuh'
+export DEFAULT_USER=$USER
 
 # ALIASES
 alias susu='sudo subl'
@@ -120,9 +120,9 @@ export PROJECT_HOME=$HOME/Devel
 source /usr/local/bin/virtualenvwrapper.sh
 
 # setup rust
-source $HOME/.cargo/env
+# source $HOME/.cargo/env
 
-export NVM_DIR="/Users/ahuh/.nvm"
+export NVM_DIR="/Users/$USER/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 eval greeting
