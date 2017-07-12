@@ -37,11 +37,11 @@ defaults write com.apple.finder ShowPathbar -bool true
 echo "Show Status bar in Finder"
 defaults write com.apple.finder ShowStatusBar -bool true
 
-echo "Set a blazingly fast keyboard repeat rate"
-defaults write NSGlobalDomain KeyRepeat -int 0.02
+#echo "Set a blazingly fast keyboard repeat rate"
+#defaults write NSGlobalDomain KeyRepeat -int 0.02
 
-echo "Set a shorter Delay until key repeat"
-defaults write NSGlobalDomain InitialKeyRepeat -int 12
+#echo "Set a shorter Delay until key repeat"
+#defaults write NSGlobalDomain InitialKeyRepeat -int 12
 
 echo "Show the ~/Library folder"
 chflags nohidden ~/Library

@@ -3,8 +3,12 @@
 
 if [ -f ~/.zsh-secrets ]; then
     source ~/.zsh-secrets
-else
-    print "404: ~/.zsh-secrets not found."
+#else
+#    print "404: ~/.zsh-secrets not found."
+fi
+# get system specific path extensions
+if [ -f ~/.zsh-paths ]; then
+	source ~/.zsh-paths
 fi
 
 # Path to your oh-my-zsh installation.
@@ -72,7 +76,7 @@ export ANDROID_HOME='/Users/$USER/Library/Android/sdk'
 export ANDROID_SDK_ROOT='/Users/$USER/Library/Android/sdk'
 export NVM_DIR='~/.nvm'
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/tools/activator-dist-1.3.12/bin:/Users/$USER/.nvm/versions/node/v7.7.3/bin:/Users/$USER/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
