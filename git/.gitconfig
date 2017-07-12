@@ -3,9 +3,9 @@
 	name = Atte Huhtakangas
 	
 [core]
-	editor = subl
+	editor = subl -n -w
 	excludesfile = /Users/atte/.gitignore_global
-	autocrlf = input # don't do any line ending conversion
+	# autocrlf = input # don't do any line ending conversion
 	
 [web]
 	browser = google-chrome
