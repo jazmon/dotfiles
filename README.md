@@ -26,5 +26,8 @@
 
 ## Making updates and modifications
 
-* To create
+* To create a list of the apps installed with Homebrew run the dump command
 
+  ```bash
+  brew bundle dump --describe
+  ```
