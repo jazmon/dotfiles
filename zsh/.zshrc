@@ -95,7 +95,6 @@ source $ZSH/oh-my-zsh.sh
 
 # ENV VARIABLES
 export REACT_EDITOR='code'
-export HOMEBREW_GITHUB_API_TOKEN='0ba589a24fd1fa7667e4728fcaa77ce23f900701'
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 export NVM_DIR="~/.nvm"
