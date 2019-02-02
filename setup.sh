@@ -1,6 +1,8 @@
+# Install homebrew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 # Get homebrew bundle to enable installing things via it
 brew tap homebrew/bundle
-# install homebrew shite
+# Install homebrew 
 brew bundle
 # install virtualenvwrapper
 pip install virtualenvwrapper
