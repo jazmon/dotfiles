@@ -85,11 +85,16 @@ plugins=(
 #  gradle 
 #  jsontools 
 #  sbt
+  tmux
 )
 # colorize battery
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
+# Configure oh my zsh tmux
+export ZSH_TMUX_AUTOSTART=true
+export ZSH_TMUX_ITERM2=true
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
