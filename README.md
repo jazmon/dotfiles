@@ -1,8 +1,8 @@
 # Dotfiles
 
 # Install apps & configs
-* Install homebrew: /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-* Then run *setup.sh*
+* Install homebrew: `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+* Then run setup.sh
 * If needed, use ~/.zsh-secrets and ~/.zsh-paths to setup system specific zsh variables
 ## iTerm
 * Install fonts `cp fonts/*.otf /Library/Fonts/`

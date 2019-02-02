@@ -61,7 +61,31 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git brew common-aliases npm osx zsh-autosuggestions yarn sublime react-native postgres node lol history extract dotenv adb zsh-syntax-highlighting thefuck z docker gradle jsontools sbt)
+plugins=(
+  git 
+  brew 
+  common-aliases 
+  npm 
+  osx 
+  zsh-autosuggestions 
+  yarn 
+  sublime 
+#  react-native 
+#  postgres 
+  node 
+  lol 
+  history 
+#  extract 
+  dotenv 
+#  adb 
+  zsh-syntax-highlighting 
+#  thefuck 
+  z 
+#  docker 
+#  gradle 
+#  jsontools 
+#  sbt
+)
 # colorize battery
 source $ZSH/oh-my-zsh.sh
 
@@ -70,13 +94,13 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # ENV VARIABLES
-export REACT_EDITOR='atom'
+export REACT_EDITOR='code'
 export HOMEBREW_GITHUB_API_TOKEN='0ba589a24fd1fa7667e4728fcaa77ce23f900701'
-export ANDROID_HOME='/Users/$USER/Library/Android/sdk'
-export ANDROID_SDK_ROOT='/Users/$USER/Library/Android/sdk'
-export NVM_DIR='~/.nvm'
+export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
+export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
+export NVM_DIR="~/.nvm"
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$PATH"
+export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
