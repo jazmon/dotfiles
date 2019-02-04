@@ -5,7 +5,9 @@ tap "homebrew/core"
 # Configurable talking characters in ASCII art
 brew "cowsay"
 # Functional programming language for building browser-based GUIs
-brew "elm", link: false
+brew "elm"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
 # Perl compatible regular expressions library with a new API
 brew "pcre2"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -18,6 +20,10 @@ brew "gdbm"
 brew "libtasn1"
 # Library for USB device access
 brew "libusb"
+# Version Control Visualization Tool
+brew "gource"
+# Smarter Dockerfile linter to validate best practices
+brew "hadolint"
 # Command-line client for the cloud PaaS
 brew "heroku"
 # Library for Apple Binary- and XML-Property Lists
@@ -38,6 +44,8 @@ brew "libtool"
 brew "xz"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Install and debug iPhone apps from the command-line
+brew "ios-deploy"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Library for command-line editing
@@ -48,6 +56,8 @@ brew "sqlite"
 brew "libxml2"
 # Rainbows and unicorns in your console!
 brew "lolcat"
+# Swiss Army Knife for macOS
+brew "m-cli"
 # Java-based project management
 brew "maven"
 # Scalable distributed version control system
@@ -64,12 +74,22 @@ brew "nmap"
 brew "pass"
 # Perl compatible regular expressions library
 brew "pcre"
+# Manage compile and link flags for libraries
+brew "pkg-config"
 # Object-relational database system
 brew "postgresql"
+# Show ps output as a tree
+brew "pstree"
+# Password generator
+brew "pwgen"
 # Python version management
 brew "pyenv"
+# Persistent key-value database, with built-in net interface
+brew "redis", restart_service: true
 # Build tool for Scala projects
 brew "sbt"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Tool to build, change, and version infrastructure
@@ -80,5 +100,35 @@ brew "thefuck"
 brew "tmux"
 # Watch files and take action when they change
 brew "watchman"
+# Internet file retriever
+brew "wget"
 # JavaScript package manager
 brew "yarn"
+brew "olafurpg/scalafmt/scalafmt", args: ["HEAD"]
+cask "android-studio"
+cask "atom"
+cask "bettertouchtool"
+cask "docker"
+cask "flowdock"
+cask "flux"
+cask "gimp"
+cask "gitkraken"
+cask "haskell-platform"
+cask "hyper"
+cask "insomnia"
+cask "iterm2"
+cask "kaleidoscope"
+cask "kap"
+cask "obs"
+cask "postico"
+cask "slack"
+cask "spectacle"
+cask "spotify"
+cask "steam"
+cask "sublime-text"
+cask "telegram"
+cask "telegram-desktop"
+cask "visual-studio-code"
+cask "vlc"
+cask "whatsapp"
+cask "wireshark"
