@@ -1,10 +1,11 @@
+#!/bin/bash
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 if [ -f ~/.zsh-secrets ]; then
     source ~/.zsh-secrets
-#else
-#    print "404: ~/.zsh-secrets not found."
+else
+    print "404: ~/.zsh-secrets not found."
 fi
 # get system specific path extensions
 if [ -f ~/.zsh-paths ]; then
@@ -73,19 +74,20 @@ plugins=(
 #  react-native 
 #  postgres 
   node 
-  lol 
+  aws 
   history 
-#  extract 
+  extract 
   dotenv 
 #  adb 
   zsh-syntax-highlighting 
 #  thefuck 
   z 
-#  docker 
+  docker 
 #  gradle 
 #  jsontools 
 #  sbt
   tmux
+  yarn-autocompletions
 )
 # colorize battery
 source $ZSH/oh-my-zsh.sh
@@ -103,13 +105,18 @@ export REACT_EDITOR='code'
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 export NVM_DIR="~/.nvm"
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
 export THEME_HIDE_HOSTNAME='no'
 export DEFAULT_USER=$USER
+export LOCAL_MAVEN="$HOME/.m2/repository"
+export ANSIBLE_NOCOWS=1
 
 # ALIASES
 alias susu='sudo subl'
@@ -126,6 +133,101 @@ ypkg() {
 greeting() {
 	fortune -a | cowsay -W 60 | lolcat
 }
+
+emu() { 
+	cd "$(dirname "$(which emulator)")" && ./emulator "$@"; 
+}
+
+# Quickly install @types/..
+# Usage: `ty react react-dom`
+# credit: @jaredpalmer
+ty() {
+  # echo "${*/#/@types\/}"
+  # echo ${*/#/@types\/}
+  yarn add --dev ${*/#/@types\/}
+  # yarn add --dev "${*/#/@types\/}"
+}
+
+# find shorthand
+# credit: @jaredpalmer
+f() {
+	find . -name "$1"
+}
+
+
+# credit: @jaredpalmer
+# function clone {
+#   # customize username to your own 
+#   local username="jazmon"
+
+#   local url=$1;
+#   local repo=$2;
+
+#   if [[ ${url:0:4} == 'http' || ${url:0:3} == 'git' ]]
+#   then
+#     # just clone this thing.
+#     repo=$(echo "$url" | awk -F/ '{print $NF}' | sed -e 's/.git$//');
+#   elif [[ -z $repo ]]
+#   then
+#     # my own stuff.
+#     repo=$url;
+#     url="git@github.com:$username/$repo";
+#   else
+#     # not my own, but I know whose it is.
+#     url="git@github.com:$url/$repo.git";
+#   fi
+
+#   git clone "$url" "$repo" && cd "$repo" && atom .;
+# }
+
+# simple git log
+# usage glr v0.2.2 v0.2.3
+# credit: @jaredpalmer
+glr() {
+    git log "$1" "$2" --pretty=format:'* %h %s' --date=short --no-merges 
+}
+
+# git log with per-commit cmd-clickable GitHub URLs (iTerm)
+# credit: @jaredpalmer
+# gf() {
+#   local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
+#   [[ "$remote" ]] || return
+#   local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
+#   git log "$@" --name-status --color | awk "$(cat <<AWK
+#     /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
+#     /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
+#     /.*/ {print \$0}
+# AWK
+#   )" | less -F
+# }
+
+# All the dig info
+# credit: @jaredpalmer
+digga() {
+	dig +nocmd "$1" any +multiline +noall +answer
+}
+
+# `o` with no arguments opens current directory, otherwise opens the given
+# location
+# credit: @jaredpalmer
+o() {
+  if [ $# -eq 0 ]; then
+  open .
+    else
+  open "$@"
+  fi
+}
+
+# Created by Sindre Sorhus
+# Magically retrieves a GitHub users email even though it's not publicly shown
+ghemail() {
+  [ "$1" = "" ] && echo "usage: $0 <GitHub username> [<repo>]" && exit 1
+
+  [ "$2" = "" ] && repo=`curl "https://api.github.com/users/$1/repos?type=owner&sort=updated" -s | sed -En 's|"name": "(.+)",|\1|p' | tr -d ' ' | head -n 1` || repo=$2
+
+  curl "https://api.github.com/repos/$1/$repo/commits" -s | sed -En 's|"(email\|name)": "(.+)",?|\2|p' | tr -s ' ' | paste - - | sort -u -k 1,1
+}
+
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -157,6 +259,12 @@ export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
 source /usr/local/bin/virtualenvwrapper.sh
 
+# Bind keys
+# bindkey "^[[D" backward-word
+# bindkey "^[[C" forward-word
+bindkey "^[a" beginning-of-line
+bindkey "^[e" end-of-line
+
 # setup rust
 # source $HOME/.cargo/env
 
@@ -164,10 +272,3 @@ export NVM_DIR="/Users/$USER/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 eval greeting
-
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/atte/.nvm/versions/node/v10.15.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/atte/.nvm/versions/node/v10.15.1/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/atte/.nvm/versions/node/v10.15.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/atte/.nvm/versions/node/v10.15.1/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
