@@ -1,0 +1,2 @@
+[submodule "tmux/.tmux/plugins/tpm"]
+	url = https://github.com/tmux-plugins/tpm.git
