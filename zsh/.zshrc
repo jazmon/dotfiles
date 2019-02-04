@@ -104,12 +104,11 @@ export ZSH_TMUX_ITERM2=true
 export REACT_EDITOR='code'
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
-export NVM_DIR="~/.nvm"
+export NVM_DIR="$HOME/.nvm"
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH"
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
+export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
@@ -142,10 +141,8 @@ emu() {
 # Usage: `ty react react-dom`
 # credit: @jaredpalmer
 ty() {
-  # echo "${*/#/@types\/}"
-  # echo ${*/#/@types\/}
+  # the regex doesn't like double quotes for some reason
   yarn add --dev ${*/#/@types\/}
-  # yarn add --dev "${*/#/@types\/}"
 }
 
 # find shorthand
@@ -223,7 +220,7 @@ o() {
 ghemail() {
   [ "$1" = "" ] && echo "usage: $0 <GitHub username> [<repo>]" && exit 1
 
-  [ "$2" = "" ] && repo=`curl "https://api.github.com/users/$1/repos?type=owner&sort=updated" -s | sed -En 's|"name": "(.+)",|\1|p' | tr -d ' ' | head -n 1` || repo=$2
+  [ "$2" = "" ] && repo=$(curl "https://api.github.com/users/$1/repos?type=owner&sort=updated" -s | sed -En 's|"name": "(.+)",|\1|p' | tr -d ' ' | head -n 1) || repo=$2
 
   curl "https://api.github.com/repos/$1/$repo/commits" -s | sed -En 's|"(email\|name)": "(.+)",?|\2|p' | tr -s ' ' | paste - - | sort -u -k 1,1
 }
