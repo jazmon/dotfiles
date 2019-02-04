@@ -1,3 +1,4 @@
+#!/bin/bash
 # CREDIT/original: https://gist.github.com/kimmobrunfeldt/350f4898d1b82cf10bce
 
 ###############################################################################
