@@ -2,6 +2,8 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
+tap "heroku/brew"
+
 # Configurable talking characters in ASCII art
 brew "cowsay"
 # Functional programming language for building browser-based GUIs
@@ -59,7 +61,7 @@ brew "lolcat"
 # Swiss Army Knife for macOS
 brew "m-cli"
 # Java-based project management
-brew "maven"
+# brew "maven"
 # Scalable distributed version control system
 brew "mercurial"
 # Merge XCode project files in git
@@ -87,7 +89,7 @@ brew "pyenv"
 # Persistent key-value database, with built-in net interface
 brew "redis", restart_service: true
 # Build tool for Scala projects
-brew "sbt"
+# brew "sbt"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
@@ -112,7 +114,7 @@ cask "docker"
 cask "flowdock"
 cask "flux"
 cask "gitkraken"
-cask "haskell-platform"
+# cask "haskell-platform"
 cask "hyper"
 cask "insomnia"
 cask "iterm2"
