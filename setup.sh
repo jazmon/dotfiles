@@ -27,6 +27,9 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # symlink dotfiles with stow
 make install
 
+# Link iterm config to in place
+ln -s ./iterm-config.plist ~/Library/Application\ Support/iTerm2/DynamicProfiles/iterm-config.plist
+
 # reload zsh if using zsh
 if [ $0 = "-zsh" ]; then
     source .zshrc
