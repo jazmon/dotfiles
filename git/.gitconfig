@@ -3,8 +3,11 @@
 	name = Atte Huhtakangas
 	
 [core]
-	editor = subl -n -w
+	#editor = subl -n -w
+	editor = micro
 	excludesfile = /Users/atte/.gitignore_global
+	ignorecase = false
+	pager = diff-so-fancy | less --tabs=4 -RFX
 	# autocrlf = input # don't do any line ending conversion
 	
 [web]
@@ -20,7 +23,7 @@
 	insteadOf = gl:
 
 [color]
-	ui = auto
+	ui = true
 	branch = auto
 	diff = auto
 	grep = auto
@@ -35,11 +38,12 @@
 	remote = cyan bold
 
 [color "diff"]
-	meta = yellow bold
+	meta = 11
 	frag = magenta bold
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+	commit = yellow bold
 
 [color "status"]
 	added = green bold
@@ -98,3 +102,8 @@
 # 	prompt = false
 # [mergetool]
 # 	prompt = false
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22

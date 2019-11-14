@@ -1,6 +1,14 @@
 #!/bin/bash
+
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
 
 if [ -f ~/.zsh-secrets ]; then
     source ~/.zsh-secrets
@@ -70,7 +78,7 @@ plugins=(
   osx 
   zsh-autosuggestions 
   yarn 
-  sublime 
+#  sublime 
 #  react-native 
 #  postgres 
   node 
@@ -92,6 +100,7 @@ plugins=(
 # colorize battery
 source $ZSH/oh-my-zsh.sh
 
+
 # User configuration
 
 # Configure oh my zsh tmux
@@ -107,7 +116,7 @@ export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 export NVM_DIR="$HOME/.nvm"
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
@@ -124,6 +133,13 @@ alias ll='ls -alhF'
 alias grep='grep --color=auto'
 alias npmopen='npm home'
 alias url='open -a /Applications/Google\ Chrome.app'
+alias tf='terraform'
+#alias diff="diff-so-fancy"
+alias cat="bat"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+alias ls="exa"
+alias l="exa -lahF"
+alias find="fd"
 
 ypkg() {
 	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
@@ -233,7 +249,7 @@ ghemail() {
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='nano'
 else
-  export EDITOR='subl -w'
+  export EDITOR='micro'
 fi
 
 # Compilation flags
@@ -251,11 +267,6 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# setup virtualenvs
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Devel
-source /usr/local/bin/virtualenvwrapper.sh
-
 # Bind keys
 # bindkey "^[[D" backward-word
 # bindkey "^[[C" forward-word
@@ -265,7 +276,17 @@ bindkey "^[e" end-of-line
 # setup rust
 # source $HOME/.cargo/env
 
-export NVM_DIR="/Users/$USER/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh
 
 eval greeting
+
+. /usr/local/opt/asdf/asdf.sh
