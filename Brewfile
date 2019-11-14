@@ -1,13 +1,42 @@
+tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
-tap "heroku/brew"
-
+tap "homebrew/services"
+tap "rukenshia/repo"
+# Generic library support script
+brew "libtool"
+# Library for command-line editing
+brew "readline"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+# GNU database manager
+brew "gdbm"
+# Command-line interface for SQLite
+brew "sqlite"
+# General-purpose data compression with high compression ratio
+brew "xz"
+# Official Amazon AWS command-line interface
+brew "awscli"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Perl compatible regular expressions library
+brew "pcre"
 # Configurable talking characters in ASCII art
 brew "cowsay"
+# Good-lookin' diffs with diff-highlight and more
+brew "diff-so-fancy"
 # Functional programming language for building browser-based GUIs
 brew "elm"
+# Modern replacement for 'ls'
+brew "exa"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# ASN.1 structure parser library
+brew "libtasn1"
+# SSL/TLS cryptography library
+brew "openssl"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Perl compatible regular expressions library with a new API
@@ -16,52 +45,36 @@ brew "pcre2"
 brew "fish"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
-# GNU database manager
-brew "gdbm"
-# ASN.1 structure parser library
-brew "libtasn1"
 # Library for USB device access
 brew "libusb"
 # Version Control Visualization Tool
 brew "gource"
 # Smarter Dockerfile linter to validate best practices
 brew "hadolint"
-# Command-line client for the cloud PaaS
-brew "heroku"
+# The Haskell Tool Stack
+brew "haskell-stack"
 # Library for Apple Binary- and XML-Property Lists
 brew "libplist"
-# SSL/TLS cryptography library
-brew "openssl"
-# USB multiplexor daemon for iPhone and iPod Touch devices
-brew "usbmuxd"
+# USB multiplexor library for iOS devices
+brew "libusbmuxd"
 # Library to communicate with iOS devices natively
 brew "libimobiledevice"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
-# Cross-platform library for communicating with iOS devices
+# Tool for managing apps on iOS devices
 brew "ideviceinstaller"
-# Generic library support script
-brew "libtool"
-# General-purpose data compression with high compression ratio
-brew "xz"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
 # Install and debug iPhone apps from the command-line
 brew "ios-deploy"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Library for command-line editing
-brew "readline"
-# Command-line interface for SQLite
-brew "sqlite"
 # GNOME XML library
 brew "libxml2"
 # Rainbows and unicorns in your console!
 brew "lolcat"
 # Swiss Army Knife for macOS
 brew "m-cli"
-# Java-based project management
-# brew "maven"
 # Scalable distributed version control system
 brew "mercurial"
 # Merge XCode project files in git
@@ -74,8 +87,8 @@ brew "ncdu"
 brew "nmap"
 # Password manager
 brew "pass"
-# Perl compatible regular expressions library
-brew "pcre"
+# Python dependency management tool
+brew "pipenv"
 # Manage compile and link flags for libraries
 brew "pkg-config"
 # Object-relational database system
@@ -88,14 +101,10 @@ brew "pwgen"
 brew "pyenv"
 # Persistent key-value database, with built-in net interface
 brew "redis", restart_service: true
-# Build tool for Scala projects
-# brew "sbt"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
-# Tool to build, change, and version infrastructure
-brew "terraform"
 # Programatically correct mistyped console commands
 brew "thefuck"
 # Terminal multiplexer
@@ -107,21 +116,31 @@ brew "wget"
 # JavaScript package manager
 brew "yarn"
 brew "olafurpg/scalafmt/scalafmt", args: ["HEAD"]
+# Access, manage & use STS token for federated access into AWS using SAML2
+brew "rukenshia/repo/saml2aws-auto"
+cask "1password"
+cask "alfred"
 cask "android-studio"
 cask "atom"
+cask "bartender"
 cask "bettertouchtool"
+cask "divvy"
 cask "docker"
-cask "flowdock"
 cask "flux"
+cask "fly"
+cask "freedome"
 cask "gitkraken"
-# cask "haskell-platform"
+cask "grammarly"
 cask "hyper"
 cask "insomnia"
 cask "iterm2"
 cask "kaleidoscope"
 cask "kap"
 cask "obs"
+cask "postgres"
 cask "postico"
+cask "postman"
+cask "redis"
 cask "slack"
 cask "spectacle"
 cask "spotify"
@@ -133,3 +152,4 @@ cask "visual-studio-code"
 cask "vlc"
 cask "whatsapp"
 cask "wireshark"
+cask "zeplin"
