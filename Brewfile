@@ -1,3 +1,4 @@
+tap "github/gh"
 tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/cask"
@@ -44,6 +45,8 @@ brew "pcre2"
 brew "fish"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
 # Library for USB device access
@@ -110,14 +113,20 @@ brew "shellcheck"
 brew "stow"
 # Programatically correct mistyped console commands
 brew "thefuck"
+# Simplified and community-driven man pages
+brew "tldr"
 # Terminal multiplexer
 brew "tmux"
 # Watch files and take action when they change
 brew "watchman"
+# Command-line client for WebSockets
+brew "websocat"
 # Internet file retriever
 brew "wget"
 # JavaScript package manager
 brew "yarn"
+# GitHub CLI
+brew "github/gh/gh"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
 # Access, manage & use STS token for federated access into AWS using SAML2
@@ -141,6 +150,7 @@ cask "insomnia"
 cask "iterm2"
 cask "kaleidoscope"
 cask "kap"
+cask "ngrok"
 cask "obs"
 cask "postgres"
 cask "postico"
