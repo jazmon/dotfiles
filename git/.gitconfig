@@ -7,7 +7,7 @@
 	editor = micro
 	excludesfile = /Users/atte/.gitignore_global
 	ignorecase = false
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta --dark
 	# autocrlf = input # don't do any line ending conversion
 	
 [web]
@@ -64,6 +64,7 @@
 	pso = push origin
 	s = status
 	st = status
+	cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d"
 	# list contributors with number of commits
 	contributors = shortlog --summary --numbered
 	undo = reset HEAD~1 --mixed

@@ -4,6 +4,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "jesseduffield/lazydocker"
 tap "rukenshia/repo"
 # Generic library support script
 brew "libtool"
@@ -35,8 +36,6 @@ brew "exa"
 brew "fd"
 # ASN.1 structure parser library
 brew "libtasn1"
-# SSL/TLS cryptography library
-brew "openssl"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Perl compatible regular expressions library with a new API
@@ -45,6 +44,8 @@ brew "pcre2"
 brew "fish"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
+# GNU implementation of the famous stream editor
+brew "gnu-sed"
 # Library for USB device access
 brew "libusb"
 # Version Control Visualization Tool
@@ -53,6 +54,8 @@ brew "gource"
 brew "hadolint"
 # The Haskell Tool Stack
 brew "haskell-stack"
+# Improved top (interactive process viewer)
+brew "htop"
 # Library for Apple Binary- and XML-Property Lists
 brew "libplist"
 # USB multiplexor library for iOS devices
@@ -100,7 +103,7 @@ brew "pwgen"
 # Python version management
 brew "pyenv"
 # Persistent key-value database, with built-in net interface
-brew "redis", restart_service: true
+brew "redis", restart_service: true, link: false
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
@@ -115,7 +118,8 @@ brew "watchman"
 brew "wget"
 # JavaScript package manager
 brew "yarn"
-brew "olafurpg/scalafmt/scalafmt", args: ["HEAD"]
+# A simple terminal UI for docker, written in Go
+brew "jesseduffield/lazydocker/lazydocker"
 # Access, manage & use STS token for federated access into AWS using SAML2
 brew "rukenshia/repo/saml2aws-auto"
 cask "1password"
@@ -124,6 +128,7 @@ cask "android-studio"
 cask "atom"
 cask "bartender"
 cask "bettertouchtool"
+cask "daisydisk"
 cask "divvy"
 cask "docker"
 cask "flux"
@@ -140,6 +145,7 @@ cask "obs"
 cask "postgres"
 cask "postico"
 cask "postman"
+cask "react-native-debugger"
 cask "redis"
 cask "slack"
 cask "spectacle"

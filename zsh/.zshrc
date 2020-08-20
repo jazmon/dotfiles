@@ -104,7 +104,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # Configure oh my zsh tmux
-export ZSH_TMUX_AUTOSTART=true
+export ZSH_TMUX_AUTOSTART=false
 export ZSH_TMUX_ITERM2=true
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -117,7 +117,7 @@ export NVM_DIR="$HOME/.nvm"
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 # export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$JAVA_HOME/:/Users/$USER/bin:$HOME/Library/Haskell/bin:$PATH:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
+export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
@@ -140,6 +140,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias ls="exa"
 alias l="exa -lahF"
 alias find="fd"
+alias s2a="saml2aws-auto"
 
 ypkg() {
 	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
@@ -276,6 +277,7 @@ bindkey "^[e" end-of-line
 # setup rust
 # source $HOME/.cargo/env
 
+eval $(thefuck --alias)
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
