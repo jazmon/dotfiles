@@ -20,6 +20,7 @@ if [ -f ~/.zsh-paths ]; then
 	source ~/.zsh-paths
 fi
 
+
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/$USER/.oh-my-zsh
 
@@ -98,6 +99,7 @@ plugins=(
   yarn-autocompletions
 )
 # colorize battery
+
 source $ZSH/oh-my-zsh.sh
 
 
@@ -125,6 +127,8 @@ export THEME_HIDE_HOSTNAME='no'
 export DEFAULT_USER=$USER
 export LOCAL_MAVEN="$HOME/.m2/repository"
 export ANSIBLE_NOCOWS=1
+# Colourize man pages
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # ALIASES
 alias susu='sudo subl'
@@ -138,9 +142,10 @@ alias tf='terraform'
 alias cat="bat"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias ls="exa"
-alias l="exa -lahF"
 alias find="fd"
 alias s2a="saml2aws-auto"
+
+alias l="exa -lahF"
 
 ypkg() {
 	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
