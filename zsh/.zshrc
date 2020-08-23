@@ -6,9 +6,9 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
+# if command -v pyenv 1>/dev/null 2>&1; then
+#   eval "$(pyenv init -)"
+# fi
 
 if [ -f ~/.zsh-secrets ]; then
     source ~/.zsh-secrets
@@ -131,9 +131,7 @@ export ANSIBLE_NOCOWS=1
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # ALIASES
-alias susu='sudo subl'
 alias ll='ls -alhF'
-# alias chrome /etc/alternatives/google-chrome
 alias grep='grep --color=auto'
 alias npmopen='npm home'
 alias url='open -a /Applications/Google\ Chrome.app'
@@ -294,6 +292,10 @@ eval $(thefuck --alias)
 # uninstall by removing these lines or running `tabtab uninstall slss`
 [[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh
 
+# init asdf
+. /usr/local/opt/asdf/asdf.sh
+
+eval "$(starship init zsh)"
+
 eval greeting
 
-. /usr/local/opt/asdf/asdf.sh

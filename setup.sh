@@ -1,15 +1,15 @@
 #!/bin/bash
 # Install homebrew
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 # Get homebrew bundle to enable installing things via it
 brew tap homebrew/bundle
 # Install homebrew 
 brew bundle
 # install virtualenvwrapper
-pip install virtualenvwrapper
+# pip install virtualenvwrapper
 # exports for virtualenvwrapper
-export WORKON_HOME=~/Envs
-mkdir -p $WORKON_HOME
+# export WORKON_HOME=~/Envs
+# mkdir -p $WORKON_HOME
 # create folder for screenshots
 mkdir -p ~/Pictures/Screenshots
 bash system-preferences.sh
@@ -28,6 +28,7 @@ git clone https://github.com/g-plane/zsh-yarn-autocompletions ${ZSH_CUSTOM:-~/.o
 (cd tmux/.tmux/plugins && git submodule add https://github.com/tmux-plugins/tpm)
 
 # symlink dotfiles with stow
+mv $HOME/.zshrc .zshrc-backup
 make install
 
 # Link iterm config to in place
