@@ -93,7 +93,7 @@ plugins=(
   z 
   docker 
 #  gradle 
-#  jsontools 
+#  jsontools
 #  sbt
   tmux
   yarn-autocompletions
@@ -109,16 +109,25 @@ source $ZSH/oh-my-zsh.sh
 export ZSH_TMUX_AUTOSTART=false
 export ZSH_TMUX_ITERM2=true
 
+# Disable aws oh my zsh plugin showing aws profile in prompt
+export SHOW_AWS_PROMPT=false
+
+# Disable aws oh my zsh plugin showing aws profile in prompt
+aws_prompt_info() {
+  true;
+}
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # ENV VARIABLES
 export REACT_EDITOR='code'
+
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
-export NVM_DIR="$HOME/.nvm"
+
+# Fix issues about language not being set
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
@@ -261,15 +270,6 @@ fi
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Bind keys
 # bindkey "^[[D" backward-word
