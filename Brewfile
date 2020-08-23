@@ -2,6 +2,7 @@ tap "github/gh"
 tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
@@ -9,6 +10,8 @@ tap "jesseduffield/lazydocker"
 tap "rukenshia/repo"
 # Generic library support script
 brew "libtool"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@1.1"
 # Library for command-line editing
 brew "readline"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
@@ -29,6 +32,8 @@ brew "exa"
 brew "fd"
 # ASN.1 structure parser library
 brew "libtasn1"
+# Manage compile and link flags for libraries
+brew "pkg-config"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Perl compatible regular expressions library with a new API
@@ -59,8 +64,6 @@ brew "libusbmuxd"
 brew "libimobiledevice"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
-# SSL/TLS cryptography library
-brew "openssl"
 # Tool for managing apps on iOS devices
 brew "ideviceinstaller"
 # Tools and libraries to manipulate images in many formats
@@ -89,8 +92,6 @@ brew "nmap"
 brew "pass"
 # Python dependency management tool
 brew "pipenv"
-# Manage compile and link flags for libraries
-brew "pkg-config"
 # Object-relational database system
 brew "postgresql"
 # Show ps output as a tree
@@ -103,6 +104,8 @@ brew "redis", restart_service: true, link: false
 brew "ripgrep"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# The cross-shell prompt for astronauts
+brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Programatically correct mistyped console commands
@@ -126,6 +129,7 @@ brew "jesseduffield/lazydocker/lazydocker"
 # Access, manage & use STS token for federated access into AWS using SAML2
 brew "rukenshia/repo/saml2aws-auto"
 cask "1password"
+cask "aerial"
 cask "alfred"
 cask "android-studio"
 cask "bartender"
@@ -135,8 +139,11 @@ cask "divvy"
 cask "docker"
 cask "flux"
 cask "fly"
+cask "font-meslo-for-powerline"
+cask "font-meslo-lg-nerd-font"
 cask "freedome"
 cask "gitkraken"
+cask "google-chrome"
 cask "grammarly"
 cask "hyper"
 cask "insomnia"
