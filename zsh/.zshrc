@@ -1,4 +1,5 @@
 #!/bin/bash
+zmodload zsh/zprof
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
@@ -72,6 +73,7 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  evalcache
   git 
   brew 
   common-aliases 
@@ -96,7 +98,7 @@ plugins=(
 #  jsontools
 #  sbt
   tmux
-  yarn-autocompletions
+ #  yarn-autocompletions
 )
 # colorize battery
 
@@ -117,18 +119,34 @@ aws_prompt_info() {
   true;
 }
 
+### Fix slowness of pastes with zsh-syntax-highlighting.zsh
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+### Fix slowness of pastes
+
+# source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # ENV VARIABLES
 export REACT_EDITOR='code'
 
+export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 
 # Fix issues about language not being set
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
+export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$JAVA_HOME/bin::$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
@@ -138,6 +156,7 @@ export LOCAL_MAVEN="$HOME/.m2/repository"
 export ANSIBLE_NOCOWS=1
 # Colourize man pages
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 
 # ALIASES
 alias ll='ls -alhF'
@@ -159,7 +178,7 @@ ypkg() {
 }
 
 greeting() {
-	fortune -a | cowsay -W 60 | lolcat
+	fortune -a # | cowsay -W 60 | lolcat
 }
 
 emu() { 
@@ -280,7 +299,7 @@ bindkey "^[e" end-of-line
 # setup rust
 # source $HOME/.cargo/env
 
-eval $(thefuck --alias)
+_evalcache thefuck --alias
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`
@@ -290,12 +309,17 @@ eval $(thefuck --alias)
 [[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh
 # tabtab source for slss package
 # uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh
+# [[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh
 
 # init asdf
 . /usr/local/opt/asdf/asdf.sh
 
-eval "$(starship init zsh)"
+_evalcache starship init zsh
+
+# sign in to 1password
+#eval $(op signin my)
+#eval $(op signin futuriceuk)
+# Add 1password zsh completions
+# eval "$(op completion zsh)"; compdef _op op
 
 eval greeting
-
