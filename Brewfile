@@ -10,16 +10,24 @@ tap "jesseduffield/lazydocker"
 tap "rukenshia/repo"
 # Generic library support script
 brew "libtool"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@1.1"
-# Library for command-line editing
-brew "readline"
 # Extendable version manager with support for Ruby, Node.js, Erlang & more
 brew "asdf"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.9"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Core application library for C
+brew "glib"
+# Manage compile and link flags for libraries
+brew "pkg-config"
+# Console Matrix
+brew "cmatrix"
+# Platform built on V8 to build network applications
+brew "node"
+# Contentful command-line tools
+brew "contentful-cli"
 # Configurable talking characters in ASCII art
 brew "cowsay"
 # Good-lookin' diffs with diff-highlight and more
@@ -32,8 +40,18 @@ brew "exa"
 brew "fd"
 # ASN.1 structure parser library
 brew "libtasn1"
-# Manage compile and link flags for libraries
-brew "pkg-config"
+# HTTP/2 C Library
+brew "nghttp2"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
+# Generate introspection data for GObject libraries
+brew "gobject-introspection"
+# OpenType text shaping engine
+brew "harfbuzz"
+# Subtitle renderer for the ASS/SSA subtitle format
+brew "libass"
+# Secure Reliable Transport
+brew "srt"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Perl compatible regular expressions library with a new API
@@ -42,18 +60,24 @@ brew "pcre2"
 brew "fish"
 # Infamous electronic fortune-cookie generator
 brew "fortune"
+# GitHub command-line tool
+brew "gh"
+# GIF image/animation creator/editor
+brew "gifsicle"
+# Distributed revision control system
+brew "git"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
 # Library for USB device access
 brew "libusb"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
 # Version Control Visualization Tool
 brew "gource"
 # Smarter Dockerfile linter to validate best practices
 brew "hadolint"
-# The Haskell Tool Stack
-brew "haskell-stack"
 # Improved top (interactive process viewer)
 brew "htop"
 # Library for Apple Binary- and XML-Property Lists
@@ -66,12 +90,18 @@ brew "libimobiledevice"
 brew "libzip"
 # Tool for managing apps on iOS devices
 brew "ideviceinstaller"
+# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
+brew "libheif"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
 # Install and debug iPhone apps from the command-line
 brew "ios-deploy"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Network authentication protocol
+brew "krb5"
 # GNOME XML library
 brew "libxml2"
 # Rainbows and unicorns in your console!
@@ -88,6 +118,10 @@ brew "micro"
 brew "ncdu"
 # Port scanning utility for large networks
 brew "nmap"
+# Tiny, lightning fast, feature-packed file manager
+brew "nnn"
+# Development kit for the Java programming language
+brew "openjdk"
 # Password manager
 brew "pass"
 # Python dependency management tool
@@ -99,16 +133,16 @@ brew "pstree"
 # Python version management
 brew "pyenv"
 # Persistent key-value database, with built-in net interface
-brew "redis", restart_service: true, link: false
+brew "redis", link: false
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
-# The cross-shell prompt for astronauts
+# Cross-shell prompt for astronauts
 brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
-# Programatically correct mistyped console commands
+# Programmatically correct mistyped console commands
 brew "thefuck"
 # Simplified and community-driven man pages
 brew "tldr"
@@ -122,49 +156,81 @@ brew "websocat"
 brew "wget"
 # JavaScript package manager
 brew "yarn"
-# GitHub CLI
-brew "github/gh/gh"
 # A simple terminal UI for docker, written in Go
 brew "jesseduffield/lazydocker/lazydocker"
-# Access, manage & use STS token for federated access into AWS using SAML2
-brew "rukenshia/repo/saml2aws-auto"
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Prebuilt OpenJDK binaries
+cask "adoptopenjdk8"
+# Apple TV Aerial screensaver
 cask "aerial"
+# Application launcher and productivity software
 cask "alfred"
+# Tools for building Android applications
 cask "android-studio"
+# Menu bar icon organizer
 cask "bartender"
+# Tool to customize input devices and automate computer systems
 cask "bettertouchtool"
+# Disk space visualizer
 cask "daisydisk"
+# Voice and text chat software
+cask "discord"
+# Application window manager focusing on simplicity
 cask "divvy"
+# App to build and share containerized applications and microservices
 cask "docker"
+# Web browser
+cask "firefox"
+# Screen color temperature controller
 cask "flux"
-cask "fly"
 cask "font-meslo-for-powerline"
 cask "font-meslo-lg-nerd-font"
-cask "freedome"
+# Git client focusing on productivity
 cask "gitkraken"
+# Web browser
 cask "google-chrome"
+# Utility to fix grammar errors and style issues in text
 cask "grammarly"
-cask "hyper"
+# Vector graphics editor
+cask "inkscape"
+# HTTP and GraphQL Client
 cask "insomnia"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-cask "kaleidoscope"
+# Open-source screen recorder built with web technology
 cask "kap"
+# Adaptive brightness for external displays
+cask "lunar"
+# Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
+# App to write, plan, collaborate, and get organized
+cask "notion"
+# Open-source software for live streaming and screen recording
 cask "obs"
 cask "postgres"
+# GUI client for PostgreSQL databases
 cask "postico"
-cask "postman"
+# Standalone app for debugging React Native apps
 cask "react-native-debugger"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
 cask "redis"
+# Instant messaging application focusing on security
+cask "signal"
+# Team communication and collaboration software
 cask "slack"
-cask "spectacle"
+# Music streaming service
 cask "spotify"
+# Video game digital distribution service
 cask "steam"
-cask "sublime-text"
+# Messaging app with a focus on speed and security
 cask "telegram"
+# Free and open-source hosted hypervisor for x86 virtualization
+cask "virtualbox"
+# Open-source code editor
 cask "visual-studio-code"
+# Multimedia player
 cask "vlc"
+# Desktop client for WhatsApp
 cask "whatsapp"
-cask "wireshark"
-cask "zeplin"
