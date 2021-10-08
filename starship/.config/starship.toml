@@ -3,7 +3,8 @@ add_newline = true
 
 # Replace the "❯" symbol in the prompt with "➜"
 [character]      # The name of the module we are configuring is "character"
-symbol = "➜"     # The "symbol" segment is being set to "➜"
+success_symbol = "➜(bold green)"     # The "symbol" segment is being set to "➜"
+error_symbol = "➜(bold red)"
 
 [aws]
 symbol = " "
@@ -13,10 +14,14 @@ full_symbol = ""
 charging_symbol = ""
 discharging_symbol = ""
 
+[env_var]
+variable = "CONTENTFUL_ENVIRONMENT"
+
+
 [conda]
 symbol = " "
 
-[docker]
+[docker_context]
 symbol = " "
 
 [elixir]
@@ -31,8 +36,8 @@ symbol = " "
 [golang]
 symbol = " "
 
-[haskell]
-symbol = " "
+#[haskell]
+#symbol = " "
 
 [hg_branch]
 symbol = " "
