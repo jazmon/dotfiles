@@ -54,6 +54,8 @@
 	renames = copies # detect copies and renames
 	indentHeuristic = true # help distinguish line changes
 	compactionHeuristic = true # should help make diffs nicer
+	algorithm = histogram
+	tool = difftastic
 
 [alias]
 	cm = commit
@@ -64,7 +66,9 @@
 	pso = push origin
 	s = status
 	st = status
-	cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 git branch -d"
+	om = "!git add . && git stash && git switch main && git pull -ff"
+	psm = "!git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base main $branch) && [[ $(git cherry main $(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done"
+	cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|main\\|develop' | xargs -n 1 git branch -d"
 	# list contributors with number of commits
 	contributors = shortlog --summary --numbered
 	undo = reset HEAD~1 --mixed
@@ -96,7 +100,8 @@
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustexitcode = true
 [merge]
-	tool = Kaleidoscope
+	tool = difftastic
+	conflictStyle = zdiff3
 [difftool "Kaleidoscope"]
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 # [difftool]
@@ -110,3 +115,25 @@
 	newHighlight = green bold 22
 [init]
 	defaultBranch = main
+[push]
+	autoSetupRemote = true
+	default = current
+[pull]
+	rebase = true
+[rebase]
+	autostash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+[help]
+	autocorrect = prompt
+[transfer]
+	fsckobjects = true
+[fetch]
+	fsckobjects = true
+[receive]
+	fsckObjects = true
+[branch]
+	sort = -committerdate
+[tag]
+	sort = taggerdate
