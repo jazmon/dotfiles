@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 zmodload zsh/zprof
 
 if type brew &>/dev/null; then
@@ -67,6 +67,8 @@ ZSH_THEME="agnoster"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
+MISE_SHIMS="$HOME/.local/share/mise/shims"
+export PATH="$MISE_SHIMS:$PNPM_HOME:$VOLTA_HOME/bin:$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$JAVA_HOME/bin::$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -78,9 +80,9 @@ plugins=(
   brew 
   common-aliases 
   npm 
-  osx 
+  macos 
   zsh-autosuggestions 
-  yarn 
+  # yarn 
 #  sublime 
 #  react-native 
 #  postgres 
@@ -88,7 +90,7 @@ plugins=(
   aws 
   history 
   extract 
-  dotenv 
+  # dotenv
 #  adb 
   zsh-syntax-highlighting 
 #  thefuck 
@@ -98,9 +100,11 @@ plugins=(
 #  jsontools
 #  sbt
   tmux
- #  yarn-autocompletions
 )
 # colorize battery
+  # asdf
+ #  yarn-autocompletions
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -132,6 +136,39 @@ zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 ### Fix slowness of pastes
 
+
+
+git_prune_squash_merged() {
+  git branch --merged | egrep -v "(^\*|main)" | xargs git branch -d
+  # Get a list of all current branches
+  git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do
+    # Get the merge-base between main and the current branch
+    mergeBase=$(git merge-base main $branch)
+    # Get the commit-tree for the current branch
+    commitTree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)
+    # If the commit-tree is not empty, then the branch is not merged
+    if [[ $(git cherry main $commitTree) == "-"* ]]; then
+      # Delete the branch
+      git branch -D $branch
+    fi
+  done
+}
+
+git_list_squash_merged() {
+  # Get a list of all current branches
+  git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do
+    # Get the merge-base between main and the current branch
+    mergeBase=$(git merge-base main $branch)
+    # Get the commit-tree for the current branch
+    commitTree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)
+    # If the commit-tree is not empty, then the branch is not merged
+    if [[ $(git cherry main $commitTree) == "-"* ]]; then
+      # echo the branch
+      echo "Branch $branch is squash merged and can be deleted"
+    fi
+  done
+}
+
 # source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -146,7 +183,6 @@ export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 # Fix issues about language not being set
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export PATH="$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:$JAVA_HOME/bin::$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
 
 export THEME_DISPLAY_USER='yes'
 # export THEME_HIDE_HOSTNAME='yes'
@@ -156,9 +192,12 @@ export LOCAL_MAVEN="$HOME/.m2/repository"
 export ANSIBLE_NOCOWS=1
 # Colourize man pages
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# Use docker buildkit
+export DOCKER_BUILDKIT=1
 
 
 # ALIASES
+alias pb="pnpm -w bootstrap"
 alias ll='ls -alhF'
 alias grep='grep --color=auto'
 alias npmopen='npm home'
@@ -172,14 +211,115 @@ alias find="fd"
 alias s2a="saml2aws-auto"
 
 alias l="exa -lahF"
+alias aws="op run --env-file=$HOME/.config/op/aws-env -- aws"
+alias gpsm="git_prune_squash_merged"
+
+alias "??"="gh copilot suggest -t shell"
+alias "git?"="gh copilot suggest -t git"
+alias "gh?"="gh copilot suggest -t gh"
 
 ypkg() {
 	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
 }
 
 greeting() {
-	fortune -a # | cowsay -W 60 | lolcat
+	fortune # -a # | cowsay -W 60 | lolcat
 }
+
+# pritunl() {
+#   args=""
+
+#   profileId="cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0" 
+#   echo "all args: '$@'"
+#   echo "first arg: '$1'"
+#   echo "second arg: '$2'"
+#   # if [[ $# != 0 ]]; then
+#   #     arg1="$1"
+#   #     shift 1
+#   # fi
+#   # echo "first arg: '$1'"
+#   # echo "second arg: '$2'"
+#   if [[ -z "$*" ]]; then
+#     args="help"
+#   elif  [[ $1 == 'start' ]]; then
+#     args="start $profileId -p $(op item get Pritunl --otp)"
+#   elif  [[ $1 == 'stop' ]]; then
+#     args="stop $profileId"
+#   fi
+#   echo "args: '$args'"
+#   /Applications/Pritunl.app/Contents/Resources/pritunl-client $args
+# }
+
+# pritunl() {
+#   client() {
+#     /Applications/Pritunl.app/Contents/Resources/pritunl-client "$@"
+#   }
+#   profileId="cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0" 
+
+#   if  [[ $1 == 'start' ]]; then
+#     otp=$(op item get Pritunl --otp)
+#     client start $profileId -p $otp
+#   elif  [[ $1 == 'stop' ]]; then
+#     client stop $profileId
+#   else
+#     client "$@"
+#   fi
+# }
+
+# pritunl_start() {
+#   /Applications/Pritunl.app/Contents/Resources/pritunl-client start cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0 -p $(op item get Pritunl --otp)
+# }
+# pritunl_stop() {
+#   /Applications/Pritunl.app/Contents/Resources/pritunl-client stop cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0
+# }
+
+# Fuzzy Git Checkout. Source: https://polothy.github.io/post/2019-08-19-fzf-git-checkout/
+fzf-git-branch() {
+    git rev-parse HEAD > /dev/null 2>&1 || return
+
+    git branch --color=always --sort=-committerdate |
+        grep -v HEAD |
+        fzf --height 50% --ansi --no-multi --preview-window right:65% \
+            --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
+        sed "s/.* //"
+}
+
+fzf-git-checkout() {
+    git rev-parse HEAD > /dev/null 2>&1 || return
+
+    local branch
+
+    branch=$(fzf-git-branch)
+    if [[ "$branch" = "" ]]; then
+        echo "No branch selected."
+        return
+    fi
+
+    # If branch name starts with 'remotes/' then it is a remote branch. By
+    # using --track and a remote branch name, it is the same as:
+    # git checkout -b branchName --track origin/branchName
+    if [[ "$branch" = 'remotes/'* ]]; then
+        git checkout --track $branch
+    else
+        git checkout $branch;
+    fi
+}
+
+fzf-open-ci() {
+    branchName=$(
+    git rev-parse HEAD > /dev/null 2>&1 || return
+
+    git branch --color=always --sort=-committerdate |
+        grep -v HEAD |
+        fzf --height 50% --ansi --no-multi --preview-window right:65% \
+            --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
+        sed "s/.* //")
+    open "https://app.circleci.com/pipelines/github/mazedesignhq/maze-monorepo?branch=${branchName}"
+}
+
+alias cib='fzf-open-ci'
+
+alias gcof='fzf-git-checkout'
 
 emu() { 
 	cd "$(dirname "$(which emulator)")" && ./emulator "$@"; 
@@ -273,6 +413,49 @@ ghemail() {
   curl "https://api.github.com/repos/$1/$repo/commits" -s | sed -En 's|"(email\|name)": "(.+)",?|\2|p' | tr -s ' ' | paste - - | sort -u -k 1,1
 }
 
+gt_stack_rebase() {
+  if [[ "$1" != "checkout" && "$1" != "install" && "$2" != "gt" && "$2" != "git" ]]; then
+    echo "Usage: gt_stack_rebase <checkout|install> [gt|git]"
+    echo " checkout - checks out pnpm-lock.yaml from main and runs pnpm i"
+    echo " install - runs pnpm i and lets pnpm resolve the conflicts"
+    echo " gt - uses graphite for rebase (default)"
+    echo " git - uses git for rebase"
+    return 1
+  fi
+  should_checkout=false
+  if [[ "$1" == "checkout" ]]; then
+    should_checkout=true
+  fi
+  is_graphite=true
+  if [[ "$2" == "git" ]]; then
+    is_graphite=false
+  fi
+  while git rebase --show-current-patch &> /dev/null; do
+    # Get list of files with merge conflicts
+    CONFLICT_FILES=$(git diff --name-only --diff-filter=U)
+    # Check if the only conflict is in the pnpm-lock.yaml
+    if [[ "$CONFLICT_FILES" == "pnpm-lock.yaml" ]]; then
+      echo "Resolving merge conflict in pnpm-lock.yaml..."
+      # Resolve the conflict
+      if $should_checkout; then
+        git checkout main pnpm-lock.yaml || true
+      fi
+      pnpm i
+      git add pnpm-lock.yaml
+      if $is_graphite; then
+        gt continue
+      else
+        git rebase --continue
+      fi
+    else
+      # Stop the script for manual conflict resolution
+      echo "Merge conflict detected in a file other than pnpm-lock.yaml. Please resolve manually."
+      exit 1
+    fi
+  done
+}
+
+alias gtsr="gt_stack_rebase"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -301,25 +484,30 @@ bindkey "^[e" end-of-line
 
 _evalcache thefuck --alias
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/sls.zsh
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-# [[ -f /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/ahuh/code/rchwebsite/lambdas/node_modules/tabtab/.completions/slss.zsh
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: /Users/atte/.volta/tools/image/packages/@withgraphite/graphite-cli/bin/gt completion >> ~/.zshrc
+#    or /Users/atte/.volta/tools/image/packages/@withgraphite/graphite-cli/bin/gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" /Users/atte/.volta/tools/image/packages/@withgraphite/graphite-cli/bin/gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
 
-# init asdf
-. /usr/local/opt/asdf/asdf.sh
+eval "$(/opt/homebrew/bin/mise activate zsh)"
+
 
 _evalcache starship init zsh
 
-# sign in to 1password
-#eval $(op signin my)
-#eval $(op signin futuriceuk)
-# Add 1password zsh completions
-# eval "$(op completion zsh)"; compdef _op op
 
 eval greeting
