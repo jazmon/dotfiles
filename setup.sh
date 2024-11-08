@@ -1,4 +1,6 @@
 #!/bin/bash
+xcode-select --install
+softwareupdate --install-rosetta --agree-to-license
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
