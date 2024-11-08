@@ -1,236 +1,306 @@
+tap "1password/tap"
+tap "buildkite/buildkite"
+tap "common-fate/granted"
+tap "fsouza/prettierd"
 tap "github/gh"
+tap "hashicorp/tap"
 tap "heroku/brew"
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 tap "homebrew/services"
-tap "jesseduffield/lazydocker"
+tap "jdxcode/tap"
+tap "openfga/tap"
 tap "rukenshia/repo"
-# Generic library support script
-brew "libtool"
-# Extendable version manager with support for Ruby, Node.js, Erlang & more
-brew "asdf"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.9"
-# Official Amazon AWS command-line interface
+tap "withgraphite/tap"
+tap "yoheimuta/protolint"
+brew "act"
+brew "actionlint"
+brew "age"
+brew "xz"
+brew "little-cms2"
+brew "webp"
+brew "jpeg-xl"
+brew "ast-grep"
 brew "awscli"
-# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
-# Core application library for C
-brew "glib"
-# Manage compile and link flags for libraries
-brew "pkg-config"
-# Console Matrix
-brew "cmatrix"
-# Platform built on V8 to build network applications
-brew "node"
-# Contentful command-line tools
-brew "contentful-cli"
-# Configurable talking characters in ASCII art
-brew "cowsay"
-# Good-lookin' diffs with diff-highlight and more
-brew "diff-so-fancy"
-# Functional programming language for building browser-based GUIs
-brew "elm", link: false
-# Modern replacement for 'ls'
-brew "exa"
-# Simple, fast and user-friendly alternative to find
-brew "fd"
-# ASN.1 structure parser library
-brew "libtasn1"
-# HTTP/2 C Library
-brew "nghttp2"
-# Validating, recursive, caching DNS resolver
-brew "unbound"
-# Generate introspection data for GObject libraries
-brew "gobject-introspection"
-# OpenType text shaping engine
-brew "harfbuzz"
-# Subtitle renderer for the ASS/SSA subtitle format
-brew "libass"
-# Secure Reliable Transport
-brew "srt"
-# Play, record, convert, and stream audio and video
-brew "ffmpeg"
-# Perl compatible regular expressions library with a new API
+brew "boost"
+brew "btop"
 brew "pcre2"
-# User-friendly command-line shell for UNIX-like operating systems
+brew "glib"
+brew "circleci"
+brew "cloc"
+brew "cmatrix"
+brew "node"
+brew "contentful-cli"
+brew "cowsay"
+brew "diff-so-fancy"
+brew "difftastic"
+brew "docker-slim"
+brew "folly"
+brew "fizz"
+brew "wangle"
+brew "fbthrift"
+brew "fb303"
+brew "edencommon"
+brew "elm"
+brew "eza"
+brew "fd"
+brew "libtasn1"
+brew "unbound"
+brew "gnutls"
+brew "harfbuzz"
+brew "libass"
+brew "libbluray"
+brew "pango"
+brew "srt"
+brew "tesseract"
+brew "ffmpeg"
 brew "fish"
-# Infamous electronic fortune-cookie generator
 brew "fortune"
-# GitHub command-line tool
+brew "fzf"
+brew "gcc"
+brew "gdu"
 brew "gh"
-# GIF image/animation creator/editor
+brew "ghostscript"
 brew "gifsicle"
-# Distributed revision control system
 brew "git"
-# Syntax-highlighting pager for git and diff output
+brew "git-branchless"
 brew "git-delta"
-# GNU implementation of the famous stream editor
+brew "git-filter-repo"
+brew "git-lfs"
+brew "git-town"
 brew "gnu-sed"
-# Library for USB device access
 brew "libusb"
-# GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
-# Version Control Visualization Tool
+brew "pkg-config"
+brew "gobject-introspection"
+brew "sdl2_image"
 brew "gource"
-# Smarter Dockerfile linter to validate best practices
+brew "netpbm"
+brew "libtool"
+brew "graphviz"
+brew "guile"
 brew "hadolint"
-# Improved top (interactive process viewer)
+brew "helm"
 brew "htop"
-# Library for Apple Binary- and XML-Property Lists
+brew "httpie"
 brew "libplist"
-# USB multiplexor library for iOS devices
 brew "libusbmuxd"
-# Library to communicate with iOS devices natively
 brew "libimobiledevice"
-# C library for reading, creating, and modifying zip archives
 brew "libzip"
-# Tool for managing apps on iOS devices
 brew "ideviceinstaller"
-# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.8"
-# Tools and libraries to manipulate images in many formats
 brew "imagemagick"
-# Install and debug iPhone apps from the command-line
 brew "ios-deploy"
-# Lightweight and flexible command-line JSON processor
 brew "jq"
-# Network authentication protocol
 brew "krb5"
-# GNOME XML library
+brew "kubectx"
+brew "kubeseal"
+brew "libgsf"
 brew "libxml2"
-# Rainbows and unicorns in your console!
+brew "localstack"
 brew "lolcat"
-# Swiss Army Knife for macOS
 brew "m-cli"
-# Scalable distributed version control system
 brew "mercurial"
-# Merge XCode project files in git
 brew "mergepbx"
-# Modern and intuitive terminal-based text editor
 brew "micro"
-# NCurses Disk Usage
+brew "mise"
 brew "ncdu"
-# Port scanning utility for large networks
+brew "nghttp2"
 brew "nmap"
-# Tiny, lightning fast, feature-packed file manager
 brew "nnn"
-# Development kit for the Java programming language
+brew "open-mpi"
 brew "openjdk"
-# Password manager
+brew "openvino"
 brew "pass"
-# Python dependency management tool
 brew "pipenv"
-# Object-relational database system
-brew "postgresql"
-# Show ps output as a tree
+brew "poppler"
+brew "postgresql@14"
+brew "protolint"
 brew "pstree"
-# Python version management
 brew "pyenv"
-# Persistent key-value database, with built-in net interface
-brew "redis", link: false
-# Search tool like grep and The Silver Searcher
+brew "python@3.10"
+brew "python@3.8"
+brew "python@3.9"
+brew "qt"
+brew "redis"
 brew "ripgrep"
-# Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
-# Cross-shell prompt for astronauts
+brew "sops"
 brew "starship"
-# Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
-# Programmatically correct mistyped console commands
 brew "thefuck"
-# Simplified and community-driven man pages
+brew "tilt"
 brew "tldr"
-# Terminal multiplexer
 brew "tmux"
-# Watch files and take action when they change
+brew "tmuxp"
 brew "watchman"
-# Command-line client for WebSockets
 brew "websocat"
-# Internet file retriever
 brew "wget"
-# JavaScript package manager
 brew "yarn"
-# A simple terminal UI for docker, written in Go
-brew "jesseduffield/lazydocker/lazydocker"
-# Password manager that keeps all passwords secure behind one password
+brew "yq"
+brew "common-fate/granted/granted"
+brew "fsouza/prettierd/prettierd"
+brew "hashicorp/tap/terraform"
+brew "openfga/tap/fga"
+brew "withgraphite/tap/graphite"
 cask "1password"
-# Prebuilt OpenJDK binaries
-cask "adoptopenjdk8"
-# Apple TV Aerial screensaver
+cask "1password-cli"
 cask "aerial"
-# Application launcher and productivity software
 cask "alfred"
-# Tools for building Android applications
-cask "android-studio"
-# Menu bar icon organizer
+cask "audacity"
+cask "aws-vault"
 cask "bartender"
-# Tool to customize input devices and automate computer systems
 cask "bettertouchtool"
-# Disk space visualizer
+cask "cloudflare-warp"
 cask "daisydisk"
-# Voice and text chat software
 cask "discord"
-# Application window manager focusing on simplicity
 cask "divvy"
-# App to build and share containerized applications and microservices
 cask "docker"
-# Web browser
 cask "firefox"
-# Screen color temperature controller
 cask "flux"
 cask "font-meslo-for-powerline"
 cask "font-meslo-lg-nerd-font"
-# Git client focusing on productivity
-cask "gitkraken"
-# Web browser
 cask "google-chrome"
-# Utility to fix grammar errors and style issues in text
 cask "grammarly"
-# Vector graphics editor
 cask "inkscape"
-# HTTP and GraphQL Client
 cask "insomnia"
-# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-# Open-source screen recorder built with web technology
+cask "jordanbaird-ice"
 cask "kap"
-# Adaptive brightness for external displays
+cask "kitty"
+cask "linear-linear"
 cask "lunar"
-# Reverse proxy, secure introspectable tunnels to localhost
 cask "ngrok"
-# App to write, plan, collaborate, and get organized
 cask "notion"
-# Open-source software for live streaming and screen recording
 cask "obs"
-cask "postgres"
-# GUI client for PostgreSQL databases
+cask "orbstack"
 cask "postico"
-# Standalone app for debugging React Native apps
+cask "raycast"
 cask "react-native-debugger"
-# Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
-cask "redis"
-# Instant messaging application focusing on security
 cask "signal"
-# Team communication and collaboration software
 cask "slack"
-# Music streaming service
 cask "spotify"
-# Video game digital distribution service
 cask "steam"
-# Messaging app with a focus on speed and security
 cask "telegram"
-# Free and open-source hosted hypervisor for x86 virtualization
-cask "virtualbox"
-# Open-source code editor
+cask "temurin@8"
 cask "visual-studio-code"
-# Multimedia player
 cask "vlc"
-# Desktop client for WhatsApp
+cask "warp"
 cask "whatsapp"
+cask "zoom"
+vscode "1password.op-vscode"
+vscode "4ops.terraform"
+vscode "aaron-bond.better-comments"
+vscode "adamcowley.neo4j-vscode"
+vscode "akamud.vscode-theme-onedark"
+vscode "akamud.vscode-theme-onelight"
+vscode "andischerer.theme-atom-one-dark"
+vscode "biomejs.biome"
+vscode "cardinal90.multi-cursor-case-preserve"
+vscode "christian-kohler.npm-intellisense"
+vscode "christian-kohler.path-intellisense"
+vscode "circleci.circleci"
+vscode "coana.coana-package-manager"
+vscode "codeque.codeque"
+vscode "codezombiech.gitignore"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
+vscode "digitalbrainstem.javascript-ejs-support"
+vscode "donjayamanne.githistory"
+vscode "dotjoshjohnson.xml"
+vscode "eamodio.gitlens"
+vscode "editorconfig.editorconfig"
+vscode "elmtooling.elm-ls-vscode"
+vscode "emilast.logfilehighlighter"
+vscode "esbenp.prettier-vscode"
+vscode "formulahendry.auto-close-tag"
+vscode "formulahendry.auto-rename-tag"
+vscode "foxundermoon.shell-format"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "github.copilot-labs"
+vscode "github.remotehub"
+vscode "github.vscode-github-actions"
+vscode "github.vscode-pull-request-github"
+vscode "googlecloudtools.cloudcode"
+vscode "graphite.gti-vscode"
+vscode "graphql.vscode-graphql"
+vscode "graphql.vscode-graphql-syntax"
+vscode "hashicorp.terraform"
+vscode "hbenl.vscode-test-explorer"
+vscode "iliazeus.vscode-ansi"
+vscode "jakeboone02.cypher-query-language"
+vscode "jasonnutter.vscode-codeowners"
+vscode "joeberria.statusbarerror"
+vscode "jtr.vscode-position"
+vscode "kumar-harsh.graphql-for-vscode"
+vscode "liamhammett.inline-parameters"
+vscode "mattpocock.ts-error-translator"
+vscode "mechatroner.rainbow-csv"
+vscode "mikestead.dotenv"
+vscode "million.million-lint"
+vscode "mindaro-dev.file-downloader"
+vscode "mindaro.mindaro"
+vscode "ms-azuretools.vscode-azureresourcegroups"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-kubernetes-tools.vscode-aks-tools"
+vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
+vscode "ms-playwright.playwright"
+vscode "ms-python.debugpy"
+vscode "ms-python.isort"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode-remote.remote-wsl"
+vscode "ms-vscode-remote.vscode-remote-extensionpack"
+vscode "ms-vscode.azure-account"
+vscode "ms-vscode.azure-repos"
+vscode "ms-vscode.live-server"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-repositories"
+vscode "ms-vscode.remote-server"
+vscode "ms-vscode.test-adapter-converter"
+vscode "ms-vscode.vscode-speech"
+vscode "ms-vsliveshare.vsliveshare"
+vscode "msjsdiag.vscode-react-native"
+vscode "neo4j-extensions.neo4j-for-vscode"
+vscode "pkief.material-icon-theme"
+vscode "prisma.prisma"
+vscode "redhat.vscode-commons"
+vscode "redhat.vscode-yaml"
+vscode "richie5um2.vscode-sort-json"
+vscode "robbowen.synthwave-vscode"
+vscode "ryanluker.vscode-coverage-gutters"
+vscode "semanticdiff.semanticdiff"
+vscode "shanoor.vscode-nginx"
+vscode "sodatea.velocity"
+vscode "softwaredotcom.music-time"
+vscode "sonarsource.sonarlint-vscode"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "styled-components.vscode-styled-components"
+vscode "stylelint.vscode-stylelint"
+vscode "tamasfe.even-better-toml"
+vscode "teamhub.teamhub"
+vscode "tilt-dev.tiltfile"
+vscode "timonwong.shellcheck"
+vscode "tinkertrain.theme-panda"
+vscode "tomrijndorp.find-it-faster"
+vscode "unifiedjs.vscode-mdx"
+vscode "usernamehw.errorlens"
+vscode "vitest.explorer"
+vscode "vmware.vscode-concourse"
+vscode "waderyan.gitblame"
+vscode "wix.vscode-import-cost"
+vscode "yoavbls.pretty-ts-errors"
+vscode "young-vform.copy-hover-type"
+vscode "zxh404.vscode-proto3"
