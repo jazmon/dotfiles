@@ -1,9 +1,15 @@
 #!/bin/bash
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+# setup homebrew to path
+echo >>$HOME/.profile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>$HOME/.profile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Get homebrew bundle to enable installing things via it
 brew tap homebrew/bundle
-# Install homebrew 
+# Install homebrew
 brew bundle
 
 # create folder for screenshots
@@ -20,14 +26,8 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 git clone https://github.com/g-plane/zsh-yarn-autocompletions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-yarn-autocompletions
 git clone https://github.com/mroth/evalcache ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/evalcache
 
-# Add tmux plugin manager 
+# Add tmux plugin manager
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-# Install asdf-vm plugins
-asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-# Import the Node.js release team's OpenPGP keys to main keyring
-bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-asdf plugin-add terraform https://github.com/Banno/asdf-hashicorp.git
 
 # symlink dotfiles with stow
 mv $HOME/.zshrc .zshrc-backup
