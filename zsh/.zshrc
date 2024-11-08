@@ -176,7 +176,7 @@ git_list_squash_merged() {
 # ENV VARIABLES
 export REACT_EDITOR='code'
 
-export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
+# export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
 export ANDROID_HOME="/Users/$USER/Library/Android/sdk"
 export ANDROID_SDK_ROOT="/Users/$USER/Library/Android/sdk"
 
