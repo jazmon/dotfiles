@@ -1,6 +1,7 @@
 [user]
 	email = atte.huhtakangas@gmail.com
 	name = Atte Huhtakangas
+	signingKey = /Users/atte/.ssh/id_ed25519
 	
 [core]
 	#editor = subl -n -w
@@ -96,12 +97,28 @@
  	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate # single line
  	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat # list by author
  	llnc = log --pretty=format:"%h\\ %s\\ [%cn]" # list by author, no colors
+	staash = stash --all
+	append = town append
+	compress = town compress
+	contribute = town contribute
+	diff-parent = town diff-parent
+	hack = town hack
+	kill = town kill
+	observe = town observe
+	park = town park
+	prepend = town prepend
+	propose = town propose
+	rename-branch = town rename-branch
+	repo = town repo
+	set-parent = town set-parent
+	ship = town ship
+	sync = town sync
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustexitcode = true
 [merge]
 	tool = difftastic
-	conflictStyle = zdiff3
+	conflictStyle = diff3
 [difftool "Kaleidoscope"]
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 # [difftool]
@@ -123,6 +140,7 @@
 [rebase]
 	autostash = true
 	updateRefs = true
+	updateRefs = true
 [rerere]
 	enabled = true
 [help]
@@ -131,9 +149,16 @@
 	fsckobjects = true
 [fetch]
 	fsckobjects = true
+	writeCommitGraph = true
 [receive]
 	fsckObjects = true
 [branch]
 	sort = -committerdate
 [tag]
 	sort = taggerdate
+[column]
+	ui = auto
+[maintenance]
+	repo = /Users/atte/code/maze-monorepo-pnpm
+[gpg]
+	format = ssh

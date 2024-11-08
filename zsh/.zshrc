@@ -206,25 +206,46 @@ alias tf='terraform'
 #alias diff="diff-so-fancy"
 alias cat="bat"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-alias ls="exa"
+alias ls="eza"
 alias find="fd"
 alias s2a="saml2aws-auto"
 
-alias l="exa -lahF"
+alias l="eza -lahF"
 alias aws="op run --env-file=$HOME/.config/op/aws-env -- aws"
 alias gpsm="git_prune_squash_merged"
+alias gpm="git branch --merged | egrep -v \"(^\*|main)\" | xargs git branch -d"
+alias grom="git rebase origin/main"
+alias gpso="git pso"
+alias gpsof="git pso --force-with-lease"
+alias pnpm-lock-from-main="git fetch --all && git checkout origin/main pnpm-lock.yaml"
+alias plfm="echo 'Checking out pnpm-lockfile.yaml from origin/main' && pnpm-lock-from-main"
 
 alias "??"="gh copilot suggest -t shell"
 alias "git?"="gh copilot suggest -t git"
 alias "gh?"="gh copilot suggest -t gh"
+
+
+alias tsc-trace="rm -rf *.tsbuildinfo || true && pnpm tsc --generateTrace trace || true && pnpm --package=@typescript/analyze-trace dlx analyze-trace trace"
 
 ypkg() {
 	open -a /Applications/Google\ Chrome.app https://yarnpkg.com/en/package/$1
 }
 
 greeting() {
-	fortune # -a # | cowsay -W 60 | lolcat
+	fortune | cowsay # -a # | cowsay -W 60 | lolcat
 }
+
+short_current_branch() {
+  CURRENT_BRANCH=$(git branch --show-current)
+  NORMALIZED_BRANCH_REF=$(echo "$CURRENT_BRANCH" | cut -c1-14 | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-zA-Z0-9-]+/-/g')
+  # ensure the branch name ends with an alphanumeric character by replacing the last character with an 'x'
+  if [[ $NORMALIZED_BRANCH_REF =~ [^a-zA-Z0-9]$ ]]; then
+    NORMALIZED_BRANCH_REF="${NORMALIZED_BRANCH_REF::-1}x"
+  fi
+  echo "$NORMALIZED_BRANCH_REF"
+}
+
+alias gcbs="short_current_branch"
 
 # pritunl() {
 #   args=""
@@ -304,20 +325,6 @@ fzf-git-checkout() {
         git checkout $branch;
     fi
 }
-
-fzf-open-ci() {
-    branchName=$(
-    git rev-parse HEAD > /dev/null 2>&1 || return
-
-    git branch --color=always --sort=-committerdate |
-        grep -v HEAD |
-        fzf --height 50% --ansi --no-multi --preview-window right:65% \
-            --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
-        sed "s/.* //")
-    open "https://app.circleci.com/pipelines/github/mazedesignhq/maze-monorepo?branch=${branchName}"
-}
-
-alias cib='fzf-open-ci'
 
 alias gcof='fzf-git-checkout'
 
@@ -414,21 +421,21 @@ ghemail() {
 }
 
 gt_stack_rebase() {
-  if [[ "$1" != "checkout" && "$1" != "install" && "$2" != "gt" && "$2" != "git" ]]; then
-    echo "Usage: gt_stack_rebase <checkout|install> [gt|git]"
+  if [[ "$1" == "-h" && "$1" == "--help" ]]; then
+    echo "Usage: gt_stack_rebase [checkout|install] [edit-msg]"
     echo " checkout - checks out pnpm-lock.yaml from main and runs pnpm i"
     echo " install - runs pnpm i and lets pnpm resolve the conflicts"
-    echo " gt - uses graphite for rebase (default)"
-    echo " git - uses git for rebase"
+    echo " edit-msg to edit the messages"
     return 1
   fi
-  should_checkout=false
-  if [[ "$1" == "checkout" ]]; then
-    should_checkout=true
+  should_checkout=true
+  if [[ "$1" == "install" ]]; then
+    should_checkout=false
   fi
-  is_graphite=true
-  if [[ "$2" == "git" ]]; then
-    is_graphite=false
+
+  edit_msg=false
+  if [[ "$3" == "edit-msg" ]]; then
+    edit_msg=true
   fi
   while git rebase --show-current-patch &> /dev/null; do
     # Get list of files with merge conflicts
@@ -442,15 +449,17 @@ gt_stack_rebase() {
       fi
       pnpm i
       git add pnpm-lock.yaml
-      if $is_graphite; then
-        gt continue
-      else
+
+      if $edit_msg; then
         git rebase --continue
+      else
+        GIT_EDITOR=true git rebase --continue
       fi
     else
       # Stop the script for manual conflict resolution
       echo "Merge conflict detected in a file other than pnpm-lock.yaml. Please resolve manually."
-      exit 1
+      echo "$CONFLICT_FILES"
+      return 1
     fi
   done
 }
@@ -511,3 +520,11 @@ _evalcache starship init zsh
 
 
 eval greeting
+
+# pnpm
+export PNPM_HOME="/Users/atte/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
