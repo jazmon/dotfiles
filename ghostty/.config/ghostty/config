@@ -1,0 +1,13 @@
+font-family = "MesloLGM Nerd Font Mono"
+font-size = 14
+font-feature = "-liga"
+theme = "monokai soda"
+quit-after-last-window-closed = true
+macos-titlebar-style = "hidden"
+macos-non-native-fullscreen = true
+# Other cool themes:
+# nightlion v2
+# Raycast_Dark
+# monokai soda
+# iTerm2 Solarized dark
+# GitHub Dark
