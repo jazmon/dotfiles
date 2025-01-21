@@ -162,3 +162,7 @@
 	repo = /Users/atte/code/maze-monorepo-pnpm
 [gpg]
 	format = ssh
+[gpg "ssh"]
+	program = ssh-keygen
+[commit]
+	gpgSign = true
