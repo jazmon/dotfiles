@@ -11,3 +11,4 @@ macos-non-native-fullscreen = true
 # monokai soda
 # iTerm2 Solarized dark
 # GitHub Dark
+keybind = shift+enter=text:\n
