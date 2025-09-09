@@ -227,7 +227,7 @@ alias tf='terraform'
 alias cat="bat"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias ls="eza"
-alias find="fd"
+# alias find="fd"
 alias s2a="saml2aws-auto"
 alias venv="python3 -m venv .venv && source .venv/bin/activate"
 
