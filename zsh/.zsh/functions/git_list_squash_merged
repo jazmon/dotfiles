@@ -1,0 +1,92 @@
+# List squash-merged branches that can be safely deleted
+# This is the read-only version of git_prune_squash_merged
+git_list_squash_merged() {
+  # Safety: ensure we're in a git repository
+  if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "❌ Error: Not in a git repository"
+    return 1
+  fi
+
+  local protected_branches=(${GIT_PRUNE_PROTECTED_BRANCHES:-"main" "master" "develop" "production"})
+  local current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+  echo "📋 Listing branches that can be safely deleted..."
+  echo "Current branch: $current_branch"
+  echo "Protected branches: ${protected_branches[@]}"
+  echo ""
+
+  # Step 1: List normally merged branches
+  echo "📋 Normally merged branches:"
+  local found_merged=false
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' --merged=HEAD refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    [[ -z "$branch" ]] && continue
+    [[ "$branch" == "$current_branch" ]] && continue
+
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        is_protected=true
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    [[ -n "$worktree_path" ]] && continue
+
+    echo "✅ $branch (merged)"
+    found_merged=true
+  done
+  if [[ "$found_merged" == false ]]; then
+    echo "   ℹ️  No normally merged branches found"
+  fi
+
+  echo ""
+  echo "📋 Squash-merged branches:"
+
+  # Step 2: List squash-merged branches
+  local original_branch=$current_branch
+  if [[ "$current_branch" != "main" ]]; then
+    git checkout -q main
+  fi
+
+  local found_squash_merged=false
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    [[ -z "$branch" ]] && continue
+    [[ "$branch" == "main" ]] && continue
+
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        is_protected=true
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    [[ -n "$worktree_path" ]] && continue
+
+    if git merge-base --is-ancestor "$branch" HEAD > /dev/null 2>&1; then
+      continue
+    fi
+
+    local merge_base=$(git merge-base main "$branch" 2>/dev/null)
+    if [[ -n "$merge_base" ]]; then
+      local commit_tree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p "$merge_base" -m "_" 2>/dev/null)
+      if [[ -n "$commit_tree" ]] && [[ $(git cherry main "$commit_tree" 2>/dev/null) == "-"* ]]; then
+        echo "✅ $branch (squash-merged)"
+        found_squash_merged=true
+      fi
+    fi
+  done
+
+  if [[ "$found_squash_merged" == false ]]; then
+    echo "   ℹ️  No squash-merged branches found"
+  fi
+
+  # Switch back to original branch
+  if [[ "$current_branch" != "main" ]] && [[ "$original_branch" != "main" ]]; then
+    git checkout -q "$original_branch"
+  fi
+
+  echo ""
+  echo "📝 Use 'git_prune_squash_merged --dry-run' to see deletion preview"
+  echo "📝 Use 'git_prune_squash_merged' to actually delete these branches"
+}

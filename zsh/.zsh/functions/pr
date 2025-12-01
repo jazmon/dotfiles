@@ -1,0 +1,19 @@
+# Open a PR with an automatically formatted title (zsh)
+# Usage: pr [base=main] [branch=current]
+pr() {
+  base=${1:-main}
+  branch=${2:-$(git rev-parse --abbrev-ref HEAD)}
+
+  if [[ $branch =~ ^([a-zA-Z]+-[0-9]+)-([^$]+) ]]; then
+    issue=$(echo "$match[1]" | tr '[:lower:]' '[:upper:]');
+    title=${match[2]//-/ };
+
+    gh pr new -d -t "[$issue] $title" -B "$base" -H "$branch" -T "pull_request_template.md"
+  else
+    echo # /br
+    echo "$(tput bold)Automatic title requires branch name to be in format [ISSUE]-[DESCRIPTION]$(tput sgr0)"
+    echo "$(tput sitm)Use cmd+shift+. to copy branch name from Linear issue$(tput sgr0)"
+
+    gh pr new -d -B "$base" -H "$branch" -T "pull_request_template.md"
+  fi
+}

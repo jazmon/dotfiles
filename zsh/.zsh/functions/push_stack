@@ -1,0 +1,217 @@
+# Push branch stack to upstream
+push_stack() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: push_stack [base_branch] [--force] [--dry-run]"
+    echo "  Push current branch and all its dependencies to upstream"
+    echo "  base_branch: Stop when reaching this branch (default: main)"
+    echo "  --force: Use --force-with-lease for push"
+    echo "  --dry-run: Show what would be pushed without actually pushing"
+    echo ""
+    echo "Examples:"
+    echo "  push_stack           # Push stack from current branch down to main"
+    echo "  push_stack main      # Same as above"
+    echo "  push_stack develop   # Push stack down to develop branch"
+    echo "  push_stack --force   # Push with --force-with-lease"
+    echo "  push_stack --dry-run # Preview what would be pushed"
+    return 0
+  fi
+
+  local base_branch="main"
+  local force_flag=""
+  local dry_run=false
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+  # Parse arguments
+  for arg in "$@"; do
+    case $arg in
+      --force)
+        force_flag="--force-with-lease"
+        ;;
+      --dry-run)
+        dry_run=true
+        ;;
+      -*)
+        echo "Unknown option: $arg"
+        return 1
+        ;;
+      *)
+        base_branch="$arg"
+        ;;
+    esac
+  done
+
+  # Check if we're in a git repository
+  if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Error: Not in a git repository"
+    return 1
+  fi
+
+  # Check if base branch exists
+  if ! git show-ref --verify --quiet refs/heads/$base_branch; then
+    if ! git show-ref --verify --quiet refs/remotes/origin/$base_branch; then
+      echo "Error: Base branch '$base_branch' does not exist locally or on origin"
+      return 1
+    fi
+  fi
+
+  # Get the list of branches from current to base using a different approach
+  local branch_stack_file=$(mktemp)
+  local temp_branch=$current_branch
+
+  echo "📋 Building branch stack..."
+
+  while [[ "$temp_branch" != "$base_branch" ]]; do
+    echo "$temp_branch" >> "$branch_stack_file"
+    echo "  📌 $temp_branch"
+
+    # Find the parent branch using git log to get the fork point
+    parent_branch=""
+    best_candidate=""
+    min_distance=9999
+
+    # Get all local branches except current
+    candidate_branches=($(git branch --format='%(refname:short)' | grep -v "^$temp_branch$"))
+
+    # Find the branch with the most recent common ancestor
+    for candidate in "${candidate_branches[@]}"; do
+      if git show-ref --verify --quiet refs/heads/$candidate 2>/dev/null; then
+        # Get the merge-base (common ancestor) between temp_branch and candidate
+        merge_base=$(git merge-base $temp_branch $candidate 2>/dev/null || continue)
+
+        # Count commits from merge-base to temp_branch (smaller = closer parent)
+        distance=$(git rev-list --count $merge_base..$temp_branch 2>/dev/null || echo "9999")
+
+        # Skip if this candidate doesn't have the common ancestor or has no distance
+        [[ "$distance" == "0" || "$distance" == "9999" ]] && continue
+
+        # Check if this candidate is a better parent (closer to temp_branch)
+        if [[ $distance -lt $min_distance ]]; then
+          # Additional check: ensure the candidate actually contains the merge-base
+          if git merge-base --is-ancestor $merge_base $candidate 2>/dev/null; then
+            min_distance=$distance
+            best_candidate=$candidate
+          fi
+        fi
+      fi
+    done
+
+    # If no suitable parent found, use base branch
+    if [[ -z "$best_candidate" ]]; then
+      parent_branch=$base_branch
+    else
+      parent_branch=$best_candidate
+    fi
+
+    echo "    ↳ Based on: $parent_branch"
+
+    # Validate parent_branch is not empty before continuing
+    if [[ -z "$parent_branch" ]]; then
+      echo "⚠️  Warning: Could not determine parent branch for $temp_branch, stopping stack traversal"
+      break
+    fi
+
+    temp_branch=$parent_branch
+
+    # Prevent infinite loops
+    if [[ ${#branches[@]} -gt 50 ]]; then
+      echo "⚠️  Warning: Stack seems very deep (>50 branches). Stopping to prevent infinite loop."
+      break
+    fi
+  done
+
+  # Read branches from file into array (in reverse order for bottom-to-top pushing)
+  local branch_stack=()
+  while IFS= read -r branch_name; do
+    branch_stack=("$branch_name" "${branch_stack[@]}")
+  done < "$branch_stack_file"
+
+  # Clean up temp file
+  rm -f "$branch_stack_file"
+
+  if [[ ${#branch_stack[@]} -eq 0 ]]; then
+    echo "🤷 No branches to push (already at base branch '$base_branch')"
+    return 0
+  fi
+
+  echo ""
+  if $dry_run; then
+    echo "🔍 DRY RUN: Would push ${#branch_stack[@]} branches to upstream..."
+  else
+    echo "🚀 Pushing ${#branch_stack[@]} branches to upstream..."
+  fi
+  echo ""
+
+  # Push each branch (already in correct order from base to top) using for-in loop
+  local success_count=0
+  local total_count=${#branch_stack[@]}
+  local branch_num=0
+
+  for branch in "${branch_stack[@]}"; do
+    ((branch_num++))
+
+    # Validate branch name is not empty
+    if [[ -z "$branch" ]]; then
+      echo "⚠️  Warning: Empty branch name at position $branch_num, skipping..."
+      continue
+    fi
+
+    if $dry_run; then
+      echo "[$branch_num/$total_count] Would push $branch..."
+
+      # Check if remote branch exists and show status
+      if git ls-remote --exit-code --heads origin $branch > /dev/null 2>&1; then
+        local local_commit=$(git rev-parse $branch 2>/dev/null || echo "unknown")
+        local remote_commit=$(git rev-parse origin/$branch 2>/dev/null || echo "unknown")
+
+        if [[ "$local_commit" == "$remote_commit" ]]; then
+          echo "  ℹ️  Branch is up to date with origin"
+        elif git merge-base --is-ancestor origin/$branch $branch 2>/dev/null; then
+          local ahead_count=$(git rev-list --count origin/$branch..$branch 2>/dev/null || echo "?")
+          echo "  📤 Would push $ahead_count new commits"
+        elif git merge-base --is-ancestor $branch origin/$branch 2>/dev/null; then
+          echo "  ⚠️  Local branch is behind remote (would need force push)"
+        else
+          echo "  ⚠️  Branches have diverged (would need force push)"
+        fi
+      else
+        echo "  🆕 Would create new remote branch"
+      fi
+
+      # Show the command that would be executed
+      local push_cmd="git push origin $branch"
+      if [[ -n "$force_flag" ]]; then
+        push_cmd="$push_cmd $force_flag"
+      fi
+      echo "  💻 Command: $push_cmd"
+
+      ((success_count++))
+    else
+      echo "[$branch_num/$total_count] Pushing $branch..."
+
+      if git push origin $branch $force_flag; then
+        echo "  ✅ Successfully pushed $branch"
+        ((success_count++))
+      else
+        echo "  ❌ Failed to push $branch"
+        echo ""
+        echo "🛑 Push failed for $branch. You may need to:"
+        echo "   • Resolve conflicts and retry"
+        echo "   • Use --force flag if you're sure"
+        echo "   • Check if the remote branch exists"
+        return 1
+      fi
+    fi
+  done
+
+  echo ""
+  if $dry_run; then
+    echo "🔍 DRY RUN: Would push all $total_count branches in the stack"
+    echo "💡 Run without --dry-run to actually push the branches"
+  else
+    if [[ $success_count -eq $total_count ]]; then
+      echo "🎉 Successfully pushed all $total_count branches in the stack!"
+    else
+      echo "⚠️  Pushed $success_count out of $total_count branches"
+    fi
+  fi
+}

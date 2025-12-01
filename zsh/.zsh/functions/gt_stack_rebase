@@ -1,0 +1,43 @@
+gt_stack_rebase() {
+  if [[ "$1" == "-h" && "$1" == "--help" ]]; then
+    echo "Usage: gt_stack_rebase [checkout|install] [edit-msg]"
+    echo " checkout - checks out pnpm-lock.yaml from main and runs pnpm i"
+    echo " install - runs pnpm i and lets pnpm resolve the conflicts"
+    echo " edit-msg to edit the messages"
+    return 1
+  fi
+  should_checkout=true
+  if [[ "$1" == "install" ]]; then
+    should_checkout=false
+  fi
+
+  edit_msg=false
+  if [[ "$3" == "edit-msg" ]]; then
+    edit_msg=true
+  fi
+  while git rebase --show-current-patch &> /dev/null; do
+    # Get list of files with merge conflicts
+    CONFLICT_FILES=$(git diff --name-only --diff-filter=U)
+    # Check if the only conflict is in the pnpm-lock.yaml
+    if [[ "$CONFLICT_FILES" == "pnpm-lock.yaml" ]]; then
+      echo "Resolving merge conflict in pnpm-lock.yaml..."
+      # Resolve the conflict
+      if $should_checkout; then
+        git checkout main pnpm-lock.yaml || true
+      fi
+      pnpm i
+      git add pnpm-lock.yaml
+
+      if $edit_msg; then
+        git rebase --continue
+      else
+        GIT_EDITOR=true git rebase --continue
+      fi
+    else
+      # Stop the script for manual conflict resolution
+      echo "Merge conflict detected in a file other than pnpm-lock.yaml. Please resolve manually."
+      echo "$CONFLICT_FILES"
+      return 1
+    fi
+  done
+}
