@@ -1,5 +1,5 @@
 #!/bin/zsh
-zmodload zsh/zprof
+# zmodload zsh/zprof
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
@@ -68,7 +68,16 @@ ZSH_THEME="agnoster"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 MISE_SHIMS="$HOME/.local/share/mise/shims"
-export PATH="$MISE_SHIMS:$PNPM_HOME:$VOLTA_HOME/bin:$HOME/.local/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$JAVA_HOME/bin::$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/Users/$USER/bin:$HOME/Library/Haskell/bin:/Users/$USER/bin:/Users/ahuh/code/flutter/bin:$PATH"
+export PATH="\
+$MISE_SHIMS:\
+$PNPM_HOME:\
+$HOME/.local/bin:\
+/Applications/Postgres.app/Contents/Versions/latest/bin:\
+/opt/homebrew/bin:\
+/opt/homebrew/sbin:\
+/Users/$USER/bin:\
+/Users/ahuh/code/flutter/bin:\
+$PATH"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -79,15 +88,15 @@ plugins=(
   git 
   brew 
   common-aliases 
-  npm 
-  macos 
+  # npm 
+  # macos 
   zsh-autosuggestions 
   # yarn 
 #  sublime 
 #  react-native 
 #  postgres 
-  node 
-  aws 
+  # node 
+  # aws 
   history 
   extract 
   # dotenv
@@ -95,11 +104,11 @@ plugins=(
   zsh-syntax-highlighting 
 #  thefuck 
   z 
-  docker 
+  # docker 
 #  gradle 
 #  jsontools
 #  sbt
-  tmux
+  # tmux
 )
 # colorize battery
   # asdf
@@ -138,35 +147,285 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 
 
+# Safely delete merged and squash-merged branches while protecting worktrees
+# 
+# This function uses git for-each-ref instead of parsing git branch output
+# to avoid issues with formatted output, worktrees, and special characters.
+# 
+# Usage: git_prune_squash_merged [--dry-run|-n|--help|-h]
+# 
+# Options:
+#   --dry-run, -n    Show what would be deleted without actually deleting
+#   --help, -h       Show this help message
+# 
+# Protected branches: main, master, develop, production (and current branch)
+# Worktree branches are automatically protected from deletion.
+# 
+# The function performs two steps:
+#   1. Delete normally merged branches (git merge)
+#   2. Delete squash-merged branches (git merge --squash)
 git_prune_squash_merged() {
-  git branch --merged | egrep -v "(^\*|main)" | xargs git branch -d
-  # Get a list of all current branches
-  git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do
-    # Get the merge-base between main and the current branch
-    mergeBase=$(git merge-base main $branch)
-    # Get the commit-tree for the current branch
-    commitTree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)
-    # If the commit-tree is not empty, then the branch is not merged
-    if [[ $(git cherry main $commitTree) == "-"* ]]; then
-      # Delete the branch
-      git branch -D $branch
+  # Parse arguments first to handle help
+  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "git_prune_squash_merged - Safely delete merged and squash-merged branches"
+    echo ""
+    echo "Usage: git_prune_squash_merged [--dry-run|-n|--help|-h]"
+    echo ""
+    echo "Options:"
+    echo "  --dry-run, -n    Show what would be deleted without actually deleting"
+    echo "  --help, -h       Show this help message"
+    echo ""
+    echo "Features:"
+    echo "  • Uses git for-each-ref for robust parsing (no issues with terminal formatting)"
+    echo "  • Automatically protects worktree branches from deletion"
+    echo "  • Protects current branch and main branches: main, master, develop, production"
+    echo "  • Handles both normally merged and squash-merged branches"
+    echo "  • Safe dry-run mode to preview changes"
+    echo ""
+    echo "Examples:"
+    echo "  git_prune_squash_merged --dry-run    # Preview what would be deleted"
+    echo "  git_prune_squash_merged              # Actually delete merged branches"
+    echo "  gpsm --dry-run                       # Using alias"
+    return 0
+  fi
+
+  # Safety: ensure we're in a git repository
+  if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "❌ Error: Not in a git repository"
+    return 1
+  fi
+
+  # Configuration - can be customized by setting environment variables
+  local protected_branches=(${GIT_PRUNE_PROTECTED_BRANCHES:-"main" "master" "develop" "production"})
+  local current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  local dry_run=false
+  
+  # Parse arguments
+  if [[ "$1" == "--dry-run" || "$1" == "-n" ]]; then
+    dry_run=true
+    echo "🔍 DRY RUN: Analyzing merged branches (no branches will be deleted)..."
+  else
+    echo "🚀 Analyzing and deleting merged branches..."
+  fi
+  
+  echo "Current branch: $current_branch"
+  echo "Protected branches: ${protected_branches[@]}"
+  echo ""
+  
+  local deleted_count=0
+  local skipped_count=0
+  
+  # Step 1: Delete normally merged branches using git for-each-ref (safer than parsing git branch output)
+  echo "📋 Step 1: Processing normally merged branches..."
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' --merged=HEAD refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    # Skip if branch is empty (shouldn't happen, but safety first)
+    [[ -z "$branch" ]] && continue
+    
+    # Skip current branch
+    if [[ "$branch" == "$current_branch" ]]; then
+      echo "⏭️  Skipping current branch: $branch"
+      ((skipped_count++))
+      continue
+    fi
+    
+    # Skip protected branches
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        echo "🔒 Skipping protected branch: $branch"
+        is_protected=true
+        ((skipped_count++))
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    
+    # Skip branches with worktrees
+    if [[ -n "$worktree_path" ]]; then
+      echo "🌳 Skipping worktree branch: $branch (worktree: $worktree_path)"
+      ((skipped_count++))
+      continue
+    fi
+    
+    # This branch is safe to delete
+    if [[ "$dry_run" == true ]]; then
+      echo "✅ Would delete merged branch: $branch"
+    else
+      echo "🗑️  Deleting merged branch: $branch"
+      if git branch -d "$branch" 2>/dev/null; then
+        ((deleted_count++))
+      else
+        echo "   ⚠️  Failed to delete $branch (may have unmerged changes)"
+      fi
     fi
   done
+  
+  echo ""
+  echo "📋 Step 2: Processing squash-merged branches..."
+  
+  # Step 2: Handle squash-merged branches (branches that were squashed but not normally merged)
+  # Switch to main branch temporarily for squash-merge detection
+  local original_branch=$current_branch
+  if [[ "$current_branch" != "main" ]]; then
+    echo "🔄 Temporarily switching to main branch for squash-merge detection..."
+    git checkout -q main
+  fi
+  
+  # Get all local branches that are NOT already merged (these might be squash-merged)
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    [[ -z "$branch" ]] && continue
+    [[ "$branch" == "main" ]] && continue  # Skip main branch
+    
+    # Skip protected branches
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        is_protected=true
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    
+    # Skip branches with worktrees
+    if [[ -n "$worktree_path" ]]; then
+      continue
+    fi
+    
+    # Skip if this branch is already merged (handled in step 1)
+    if git merge-base --is-ancestor "$branch" HEAD > /dev/null 2>&1; then
+      continue
+    fi
+    
+    # Check if this branch was squash-merged
+    local merge_base=$(git merge-base main "$branch" 2>/dev/null)
+    if [[ -n "$merge_base" ]]; then
+      local commit_tree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p "$merge_base" -m "_" 2>/dev/null)
+      if [[ -n "$commit_tree" ]] && [[ $(git cherry main "$commit_tree" 2>/dev/null) == "-"* ]]; then
+        # This branch was squash-merged
+        if [[ "$dry_run" == true ]]; then
+          echo "✅ Would delete squash-merged branch: $branch"
+        else
+          echo "🗑️  Deleting squash-merged branch: $branch"
+          if git branch -D "$branch" 2>/dev/null; then  # Use -D for squash-merged branches
+            ((deleted_count++))
+          else
+            echo "   ⚠️  Failed to delete $branch"
+          fi
+        fi
+      fi
+    fi
+  done
+  
+  # Switch back to original branch
+  if [[ "$current_branch" != "main" ]] && [[ "$original_branch" != "main" ]]; then
+    echo "🔄 Switching back to original branch: $original_branch"
+    git checkout -q "$original_branch"
+  fi
+  
+  echo ""
+  if [[ "$dry_run" == true ]]; then
+    echo "🔍 DRY RUN complete. Run without --dry-run to actually delete branches."
+  else
+    echo "🏁 Branch cleanup complete!"
+    if [[ $deleted_count -gt 0 ]]; then
+      echo "   ✅ Deleted $deleted_count branches"
+    else
+      echo "   ℹ️  No branches were deleted"
+    fi
+  fi
 }
 
+# List squash-merged branches that can be safely deleted
+# This is the read-only version of git_prune_squash_merged
 git_list_squash_merged() {
-  # Get a list of all current branches
-  git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do
-    # Get the merge-base between main and the current branch
-    mergeBase=$(git merge-base main $branch)
-    # Get the commit-tree for the current branch
-    commitTree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p $mergeBase -m _)
-    # If the commit-tree is not empty, then the branch is not merged
-    if [[ $(git cherry main $commitTree) == "-"* ]]; then
-      # echo the branch
-      echo "Branch $branch is squash merged and can be deleted"
+  # Safety: ensure we're in a git repository
+  if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "❌ Error: Not in a git repository"
+    return 1
+  fi
+
+  local protected_branches=(${GIT_PRUNE_PROTECTED_BRANCHES:-"main" "master" "develop" "production"})
+  local current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  
+  echo "📋 Listing branches that can be safely deleted..."
+  echo "Current branch: $current_branch"
+  echo "Protected branches: ${protected_branches[@]}"
+  echo ""
+  
+  # Step 1: List normally merged branches
+  echo "📋 Normally merged branches:"
+  local found_merged=false
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' --merged=HEAD refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    [[ -z "$branch" ]] && continue
+    [[ "$branch" == "$current_branch" ]] && continue
+    
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        is_protected=true
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    [[ -n "$worktree_path" ]] && continue
+    
+    echo "✅ $branch (merged)"
+    found_merged=true
+  done
+  if [[ "$found_merged" == false ]]; then
+    echo "   ℹ️  No normally merged branches found"
+  fi
+  
+  echo ""
+  echo "📋 Squash-merged branches:"
+  
+  # Step 2: List squash-merged branches
+  local original_branch=$current_branch
+  if [[ "$current_branch" != "main" ]]; then
+    git checkout -q main
+  fi
+  
+  local found_squash_merged=false
+  git for-each-ref --format='%(refname:short)%00%(worktreepath)' refs/heads/ | while IFS=$'\0' read -r branch worktree_path; do
+    [[ -z "$branch" ]] && continue
+    [[ "$branch" == "main" ]] && continue
+    
+    local is_protected=false
+    for protected in "${protected_branches[@]}"; do
+      if [[ "$branch" == "$protected" ]]; then
+        is_protected=true
+        break
+      fi
+    done
+    [[ "$is_protected" == true ]] && continue
+    [[ -n "$worktree_path" ]] && continue
+    
+    if git merge-base --is-ancestor "$branch" HEAD > /dev/null 2>&1; then
+      continue
+    fi
+    
+    local merge_base=$(git merge-base main "$branch" 2>/dev/null)
+    if [[ -n "$merge_base" ]]; then
+      local commit_tree=$(git commit-tree $(git rev-parse "$branch^{tree}") -p "$merge_base" -m "_" 2>/dev/null)
+      if [[ -n "$commit_tree" ]] && [[ $(git cherry main "$commit_tree" 2>/dev/null) == "-"* ]]; then
+        echo "✅ $branch (squash-merged)"
+        found_squash_merged=true
+      fi
     fi
   done
+  
+  if [[ "$found_squash_merged" == false ]]; then
+    echo "   ℹ️  No squash-merged branches found"
+  fi
+  
+  # Switch back to original branch
+  if [[ "$current_branch" != "main" ]] && [[ "$original_branch" != "main" ]]; then
+    git checkout -q "$original_branch"
+  fi
+  
+  echo ""
+  echo "📝 Use 'git_prune_squash_merged --dry-run' to see deletion preview"
+  echo "📝 Use 'git_prune_squash_merged' to actually delete these branches"
 }
 
 # Open a PR with an automatically formatted title (zsh)
@@ -225,9 +484,7 @@ alias url='open -a /Applications/Google\ Chrome.app'
 alias tf='terraform'
 #alias diff="diff-so-fancy"
 alias cat="bat"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias ls="eza"
-# alias find="fd"
 alias s2a="saml2aws-auto"
 alias venv="python3 -m venv .venv && source .venv/bin/activate"
 
@@ -267,53 +524,6 @@ short_current_branch() {
 }
 
 alias gcbs="short_current_branch"
-
-# pritunl() {
-#   args=""
-
-#   profileId="cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0" 
-#   echo "all args: '$@'"
-#   echo "first arg: '$1'"
-#   echo "second arg: '$2'"
-#   # if [[ $# != 0 ]]; then
-#   #     arg1="$1"
-#   #     shift 1
-#   # fi
-#   # echo "first arg: '$1'"
-#   # echo "second arg: '$2'"
-#   if [[ -z "$*" ]]; then
-#     args="help"
-#   elif  [[ $1 == 'start' ]]; then
-#     args="start $profileId -p $(op item get Pritunl --otp)"
-#   elif  [[ $1 == 'stop' ]]; then
-#     args="stop $profileId"
-#   fi
-#   echo "args: '$args'"
-#   /Applications/Pritunl.app/Contents/Resources/pritunl-client $args
-# }
-
-# pritunl() {
-#   client() {
-#     /Applications/Pritunl.app/Contents/Resources/pritunl-client "$@"
-#   }
-#   profileId="cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0" 
-
-#   if  [[ $1 == 'start' ]]; then
-#     otp=$(op item get Pritunl --otp)
-#     client start $profileId -p $otp
-#   elif  [[ $1 == 'stop' ]]; then
-#     client stop $profileId
-#   else
-#     client "$@"
-#   fi
-# }
-
-# pritunl_start() {
-#   /Applications/Pritunl.app/Contents/Resources/pritunl-client start cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0 -p $(op item get Pritunl --otp)
-# }
-# pritunl_stop() {
-#   /Applications/Pritunl.app/Contents/Resources/pritunl-client stop cqfpm50cii6ldrb9iyt1vx4gtzc3qcu0
-# }
 
 # Fuzzy Git Checkout. Source: https://polothy.github.io/post/2019-08-19-fzf-git-checkout/
 fzf-git-branch() {
@@ -731,7 +941,7 @@ bindkey "^[e" end-of-line
 # setup rust
 # source $HOME/.cargo/env
 
-_evalcache thefuck --alias
+# _evalcache thefuck --alias
 
 #compdef gt
 ###-begin-gt-completions-###
@@ -759,7 +969,7 @@ eval "$(/opt/homebrew/bin/mise activate zsh)"
 _evalcache starship init zsh
 
 
-eval greeting
+# eval greeting
 
 # pnpm
 export PNPM_HOME="/Users/atte/Library/pnpm"
