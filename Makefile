@@ -1,6 +1,6 @@
 .DEFAULT_GOAL:=install
 
-PACKAGES=fish git heroku hg hyper omf zsh tmux starship ghostty
+PACKAGES=git zsh tmux starship ghostty
 
 .PHONY: install
 install:

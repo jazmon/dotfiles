@@ -21,9 +21,15 @@
 
 ### iTerm
 
-* Configure the font in iTerm
-* Install the provided theme in iterm `iterm/Solarized Dark Higher Contrast.itermcolors`
-* Install the keymap `iterm/keymap.itermkeymap`
+The setup script automatically configures iTerm2 with the Solarized Dark Higher Contrast theme and custom profile.
+
+**Optional manual steps:**
+* Import color scheme: iTerm2 → Preferences → Profiles → Colors → Color Presets → Import
+  - Color scheme file is automatically copied to `~/Library/Application Support/iTerm2/`
+* Import keymap: iTerm2 → Preferences → Keys → Key Bindings → Presets → Import
+  - Keymap file: `iterm/keymap.itermkeymap`
+
+**Note:** The font (MesloLGM-RegularForPowerline) is installed automatically via Homebrew.
 
 ## Making updates and modifications
 

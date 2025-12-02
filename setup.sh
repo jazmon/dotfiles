@@ -165,6 +165,55 @@ else
     echo "✓ tmux plugin manager already installed"
 fi
 
+###############################################################################
+# iTerm2 Configuration                                                        #
+###############################################################################
+
+# Only configure iTerm2 if it's installed
+if [ -d "/Applications/iTerm2.app" ]; then
+    echo "Configuring iTerm2..."
+
+    ITERM_PROFILES_DIR="$HOME/Library/Application Support/iTerm2/DynamicProfiles"
+    DOTFILES_ITERM_DIR="$(pwd)/iterm"
+
+    # Create DynamicProfiles directory if it doesn't exist
+    mkdir -p "$ITERM_PROFILES_DIR"
+
+    # Copy the profile to Dynamic Profiles directory
+    # iTerm2 will automatically load any JSON file from this directory
+    if [ -f "$DOTFILES_ITERM_DIR/iterm-config.json" ]; then
+        cp "$DOTFILES_ITERM_DIR/iterm-config.json" "$ITERM_PROFILES_DIR/dotfiles-profile.json"
+        echo "✓ iTerm2 profile installed to Dynamic Profiles"
+    else
+        echo "Warning: iterm-config.json not found at $DOTFILES_ITERM_DIR"
+    fi
+
+    # Copy color scheme for manual import
+    if [ -f "$DOTFILES_ITERM_DIR/Solarized Dark Higher Contrast.itermcolors" ]; then
+        mkdir -p "$HOME/Library/Application Support/iTerm2"
+        cp "$DOTFILES_ITERM_DIR/Solarized Dark Higher Contrast.itermcolors" "$HOME/Library/Application Support/iTerm2/"
+        echo "✓ Color scheme copied to iTerm2 directory"
+        echo "  Import via: iTerm2 → Preferences → Profiles → Colors → Color Presets → Import"
+    fi
+
+    # Keymap installation note
+    if [ -f "$DOTFILES_ITERM_DIR/keymap.itermkeymap" ]; then
+        echo "ℹ Keymap file available at: $DOTFILES_ITERM_DIR/keymap.itermkeymap"
+        echo "  Import via: iTerm2 → Preferences → Keys → Key Bindings → Presets → Import"
+    fi
+
+    # Verify font is available
+    if fc-list | grep -qi "MesloLGM.*Powerline"; then
+        echo "✓ MesloLGM Powerline font is installed"
+    else
+        echo "⚠ MesloLGM Powerline font not found. Run 'brew bundle' to install."
+    fi
+
+    echo "✓ iTerm2 configuration complete"
+else
+    echo "ℹ iTerm2 not installed, skipping iTerm2 configuration"
+fi
+
 # Symlink dotfiles with stow
 # Backup existing .zshrc if it exists and is not a symlink (only create one backup)
 if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
@@ -177,6 +226,44 @@ if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
         backup_file="$HOME/.zshrc-backup-$(date +%Y%m%d-%H%M%S)"
         mv "$HOME/.zshrc" "$backup_file"
     fi
+fi
+
+# Create template files for user-specific zsh configuration
+if [ ! -f "$HOME/.zsh-secrets" ]; then
+    echo "Creating ~/.zsh-secrets template..."
+    cat > "$HOME/.zsh-secrets" << 'SECRETS_EOF'
+#!/bin/zsh
+# This file is for secrets and sensitive environment variables that should not be committed to git
+# Examples:
+# export GITHUB_TOKEN="your_token_here"
+# export AWS_ACCESS_KEY_ID="your_key_here"
+# export ANTHROPIC_API_KEY="your_key_here"
+
+# Add your secrets below:
+
+SECRETS_EOF
+    chmod 600 "$HOME/.zsh-secrets"
+    echo "✓ Created ~/.zsh-secrets template (add your secrets here)"
+else
+    echo "✓ ~/.zsh-secrets already exists"
+fi
+
+if [ ! -f "$HOME/.zsh-paths" ]; then
+    echo "Creating ~/.zsh-paths template..."
+    cat > "$HOME/.zsh-paths" << 'PATHS_EOF'
+#!/bin/zsh
+# This file is for system-specific PATH extensions that should not be committed to git
+# Examples:
+# export PATH="$HOME/custom-tools/bin:$PATH"
+# export PATH="/opt/local/bin:$PATH"
+
+# Add your custom paths below:
+
+PATHS_EOF
+    chmod 644 "$HOME/.zsh-paths"
+    echo "✓ Created ~/.zsh-paths template (add system-specific paths here)"
+else
+    echo "✓ ~/.zsh-paths already exists"
 fi
 
 if command -v make &> /dev/null && [ -f "Makefile" ]; then
