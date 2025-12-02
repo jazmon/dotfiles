@@ -116,6 +116,14 @@ else
     echo "✓ evalcache already installed"
 fi
 
+# Initialize git submodules (for Oh My Tmux)
+if [ -f ".gitmodules" ]; then
+    echo "Initializing git submodules..."
+    git submodule update --init --recursive
+else
+    echo "✓ No git submodules to initialize"
+fi
+
 # Add tmux plugin manager if not already present
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     echo "Installing tmux plugin manager..."

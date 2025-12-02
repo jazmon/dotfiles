@@ -2,9 +2,16 @@
 # CREDIT/original: https://gist.github.com/kimmobrunfeldt/350f4898d1b82cf10bce
 # Updated for modern macOS (Sequoia/Sonoma and later)
 
-set -e  # Exit on error
-
 echo "Applying macOS system preferences..."
+echo ""
+
+# Request sudo access upfront for settings that require elevated privileges
+echo "Some settings require administrator privileges."
+sudo -v
+
+# Keep sudo alive in background while script runs
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 echo ""
 
 ###############################################################################
@@ -34,7 +41,7 @@ echo "→ Show the ~/Library folder"
 chflags nohidden ~/Library
 
 echo "→ Show the /Volumes folder"
-sudo chflags nohidden /Volumes
+sudo chflags nohidden /Volumes 2>/dev/null || echo "  (Skipped - requires Full Disk Access)"
 
 ###############################################################################
 # Finder                                                                      #
@@ -139,11 +146,11 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 ###############################################################################
 
 echo "→ Use scroll gesture with Ctrl modifier key to zoom"
-defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
-defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
+sudo defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+sudo defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 
 echo "→ Follow mouse when zoomed in"
-defaults write com.apple.universalaccess closeViewPanningMode -int 0
+sudo defaults write com.apple.universalaccess closeViewPanningMode -int 0
 
 echo "→ Enable tap to click for trackpad"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
