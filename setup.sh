@@ -28,14 +28,19 @@ fi
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    # Setup homebrew to path (use .zprofile for zsh)
-    echo "" >>$HOME/.zprofile
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>$HOME/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
     echo "✓ Homebrew already installed"
     eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Setup homebrew to path (use .zprofile for zsh) - idempotent check
+if ! grep -q '/opt/homebrew/bin/brew shellenv' "$HOME/.zprofile" 2>/dev/null; then
+    echo "Adding Homebrew to .zprofile..."
+    echo "" >>$HOME/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>$HOME/.zprofile
+else
+    echo "✓ Homebrew already in .zprofile"
 fi
 
 # Check for Brewfile
@@ -47,9 +52,7 @@ if [ ! -f "Brewfile" ]; then
         exit 1
     fi
 else
-    # Get homebrew bundle to enable installing things via it
-    brew tap homebrew/bundle
-    # Install packages from Brewfile
+    # Install packages from Brewfile (brew bundle is now built into Homebrew)
     echo "Installing packages from Brewfile..."
     brew bundle
 fi
@@ -122,11 +125,17 @@ else
 fi
 
 # Symlink dotfiles with stow
-# Backup existing .zshrc if it exists and is not a symlink
+# Backup existing .zshrc if it exists and is not a symlink (only create one backup)
 if [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
-    backup_file="$HOME/.zshrc-backup-$(date +%Y%m%d-%H%M%S)"
-    echo "Backing up existing .zshrc to $backup_file"
-    mv "$HOME/.zshrc" "$backup_file"
+    # Check if a backup already exists to avoid multiple backups
+    if [ ! -f "$HOME/.zshrc-backup" ]; then
+        echo "Backing up existing .zshrc to ~/.zshrc-backup"
+        mv "$HOME/.zshrc" "$HOME/.zshrc-backup"
+    else
+        echo "Warning: .zshrc exists but backup already present. Moving to timestamped backup."
+        backup_file="$HOME/.zshrc-backup-$(date +%Y%m%d-%H%M%S)"
+        mv "$HOME/.zshrc" "$backup_file"
+    fi
 fi
 
 if command -v make &> /dev/null && [ -f "Makefile" ]; then
