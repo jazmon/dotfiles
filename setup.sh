@@ -116,12 +116,45 @@ else
     echo "✓ evalcache already installed"
 fi
 
-# Initialize git submodules (for Oh My Tmux)
+# Initialize git submodules (for vim plugins)
 if [ -f ".gitmodules" ]; then
     echo "Initializing git submodules..."
     git submodule update --init --recursive
 else
     echo "✓ No git submodules to initialize"
+fi
+
+# Install Oh My Tmux if not already present
+if [ ! -d "$HOME/.tmux-config" ]; then
+    echo "Installing Oh My Tmux..."
+    git clone https://github.com/gpakosz/.tmux.git ~/.tmux-config
+else
+    echo "✓ Oh My Tmux already installed"
+fi
+
+# Create symlink for Oh My Tmux config
+if [ ! -L "$HOME/.tmux.conf" ]; then
+    if [ -f "$HOME/.tmux.conf" ]; then
+        echo "Backing up existing .tmux.conf to ~/.tmux.conf.backup"
+        mv "$HOME/.tmux.conf" "$HOME/.tmux.conf.backup"
+    fi
+    echo "Creating symlink ~/.tmux.conf → ~/.tmux-config/.tmux.conf"
+    ln -s ~/.tmux-config/.tmux.conf ~/.tmux.conf
+else
+    echo "✓ .tmux.conf symlink already exists"
+fi
+
+# Copy tmux local config template if not present
+if [ ! -f "$HOME/.tmux.conf.local" ]; then
+    if [ -f "tmux-conf.local.template" ]; then
+        echo "Copying .tmux.conf.local template to home directory"
+        cp tmux-conf.local.template "$HOME/.tmux.conf.local"
+    else
+        echo "Warning: tmux-conf.local.template not found, using Oh My Tmux default"
+        cp ~/.tmux-config/.tmux.conf.local "$HOME/.tmux.conf.local" 2>/dev/null || true
+    fi
+else
+    echo "✓ .tmux.conf.local already exists"
 fi
 
 # Add tmux plugin manager if not already present

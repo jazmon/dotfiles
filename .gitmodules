@@ -1,3 +1,9 @@
-[submodule "tmux/.tmux-config"]
-	path = tmux/.tmux-config
-	url = https://github.com/gpakosz/.tmux.git
+[submodule "vim/.vim/bundle/nerdtree"]
+	path = vim/.vim/bundle/nerdtree
+	url = https://github.com/preservim/nerdtree.git
+[submodule "vim/.vim/bundle/vim-colors-solarized"]
+	path = vim/.vim/bundle/vim-colors-solarized
+	url = https://github.com/altercation/vim-colors-solarized.git
+[submodule "vim/.vim/bundle/vim-gitgutter"]
+	path = vim/.vim/bundle/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter.git

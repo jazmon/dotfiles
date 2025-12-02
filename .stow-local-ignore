@@ -1,0 +1,9 @@
+\.git
+\.gitignore
+\.gitmodules
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Ignore git submodule directories (they should be cloned separately)
+\.tmux-config$
