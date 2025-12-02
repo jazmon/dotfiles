@@ -4,12 +4,9 @@
 	signingKey = /Users/atte/.ssh/id_ed25519
 	
 [core]
-	#editor = subl -n -w
 	editor = micro
 	excludesfile = /Users/atte/.gitignore_global
-	ignorecase = false
 	pager = delta --dark
-	# autocrlf = input # don't do any line ending conversion
 	
 [web]
 	browser = google-chrome
@@ -54,9 +51,9 @@
 [diff]
 	renames = copies # detect copies and renames
 	indentHeuristic = true # help distinguish line changes
-	compactionHeuristic = true # should help make diffs nicer
 	algorithm = histogram
 	tool = difftastic
+	external = difft
 
 [alias]
 	cm = commit
@@ -113,18 +110,26 @@
 	set-parent = town set-parent
 	ship = town ship
 	sync = town sync
+	# difftastic aliases
+	dft = difftool
+	dlog = -c diff.external=difft log -p --ext-diff
 [mergetool "Kaleidoscope"]
 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
 	trustexitcode = true
 [merge]
-	tool = difftastic
 	conflictStyle = diff3
+[difftool]
+	prompt = false
+
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+
 [difftool "Kaleidoscope"]
 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-# [difftool]
-# 	prompt = false
-# [mergetool]
-# 	prompt = false
+
+[pager]
+	difftool = true
+
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
@@ -140,7 +145,6 @@
 [rebase]
 	autostash = true
 	updateRefs = true
-	updateRefs = true
 [rerere]
 	enabled = true
 [help]
@@ -154,6 +158,7 @@
 	fsckObjects = true
 [branch]
 	sort = -committerdate
+	autosetuprebase = always
 [tag]
 	sort = taggerdate
 [column]
